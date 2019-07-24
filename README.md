@@ -1,1 +1,0 @@
-# Scripts-for-100KGP-research-project
