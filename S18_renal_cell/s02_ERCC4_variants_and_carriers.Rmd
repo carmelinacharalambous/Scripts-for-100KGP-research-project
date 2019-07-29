@@ -1,0 +1,256 @@
+---
+title: ERCC4 variants and carriers in Renal Clear Cell Carcinoma"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+started: CC09Jul2019  
+last updated: CC09Jul2019  
+
+# --- Summary --- #
+
+Make a summary of variants and carriers for ERCC4 gene in renal clear cell carcinoma dataset  
+
+# --- Start section --- #
+
+### Environment
+
+<style>
+pre {
+  overflow-x: auto;
+}
+pre code {
+  word-wrap: normal;
+  white-space: pre;
+}
+</style>
+
+```{r start}
+
+# set_width
+options(width = 999)
+
+# Log time
+Sys.time()
+
+# Clean-up
+rm(list=ls())
+graphics.off()
+gc()
+
+# Gene
+gene="ERCC4"
+
+# Base folder
+base_folder <- "/home/ccharalambous/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution"
+
+# Misc tech options
+options(stringsAsFactors = F,
+        warnPartialMatchArgs = T, 
+        warnPartialMatchAttr = T, 
+        warnPartialMatchDollar = T)
+
+```
+
+# Load data  
+
+```{r load_data}
+
+load(paste(base_folder,"data/S38_renal_cell/Renal clear cell carcinoma.RData",sep="/"))
+
+```
+
+# Variants summary
+
+"CHROM" and "POS" are needed for making IGV screenshots.  
+"Protein_position","Amino_acids","EXON" and "INTRON" are needed for Lollipop plots.  
+The other variant annotations (e.g. allelic counts in cases and controls etc) are optional  
+
+```{r select_variants}
+
+selected_variants <- variants.df$SYMBOL == gene
+selected_variants.df <- variants.df[selected_variants,c("CHROM","POS","SYMBOL","Protein_position","Amino_acids","EXON","INTRON",
+                                                        "Existing_variation","Consequence","ClinVar","LoF","FIM","gnomAD_NFE_AF",
+                                                        "total_ac","total_an","total_af",
+                                                        "cases_ac","cases_an","cases_af",
+                                                        "controls_ac","controls_an","controls_af",
+                                                        "crude_effect_direction",
+                                                        "fisher_crude_or","fisher_crude_p","fisher_crude_fdr",
+                                                        "glm_beta","glm_p","glm_fdr","glm_status")]
+
+```
+
+# Select carriers genotypes
+
+```{r select_carriers_genotypes}
+
+# Select genotypes
+selected_genotypes.mx <- genotypes.mx[selected_variants,]
+
+# Select carriers
+aggregated_counts <- apply(selected_genotypes.mx,2,sum,na.rm=T)
+table(aggregated_counts)
+carriers <- aggregated_counts > 0
+
+# Genotypes in carriers
+genotypes_in_carriers.mx <- selected_genotypes.mx[,carriers]
+carriers <- colnames(genotypes_in_carriers.mx)
+
+# Case/control status in carriers
+phenotypes_in_carriers <- phenotypes.df[colnames(genotypes_in_carriers.mx),"cc"]
+phenotypes_in_carriers
+
+# Clean-up
+rm(selected_variants, selected_genotypes.mx, aggregated_counts)
+
+```
+
+# Get homozygous cariers in cases and controls
+
+```{r hom_carriers}
+
+# Initialise vectors of homozygous carriers
+names_homs_in_cases <- NULL
+names_homs_in_controls <- NULL
+count_homs_in_cases <- NULL
+count_homs_in_controls <- NULL
+
+# For each variant
+for(var in 1:nrow(genotypes_in_carriers.mx)){
+  
+  # Reset loop variables to NA
+  hom_carriers_in_cases <- NA
+  hom_carriers_in_controls <- NA
+
+  # Get homozygous samples in cases and controls (make logical vectors)
+  hom_carriers_in_cases <- phenotypes_in_carriers == 1 & genotypes_in_carriers.mx[var,] == 2
+  hom_carriers_in_controls <- phenotypes_in_carriers == 0 & genotypes_in_carriers.mx[var,] == 2
+  
+  # Count homozygous samples in cases and controls
+  num_hom_carriers_in_cases <- sum(hom_carriers_in_cases)
+  num_hom_carriers_in_controls <- sum(hom_carriers_in_controls)
+  
+  # Get names of the homozygous samples in cases, if any (note using collapse instead of sep!)
+  if(num_hom_carriers_in_cases > 0){
+    hom_carriers_in_cases <- paste(carriers[hom_carriers_in_cases], collapse=",")
+  }else{
+    hom_carriers_in_cases <- NA
+  }
+
+  # Get names of the homozygous samples in controls, if any (note using collapse instead of sep!)
+  if(num_hom_carriers_in_controls > 0){
+    hom_carriers_in_controls <- paste(carriers[hom_carriers_in_controls], collapse=",")
+  }else{
+    hom_carriers_in_controls <- NA
+  }
+  
+  # Add results to the output vectors
+  names_homs_in_cases <- c(names_homs_in_cases,hom_carriers_in_cases)
+  names_homs_in_controls <- c(names_homs_in_controls,hom_carriers_in_controls)
+  count_homs_in_cases <- c(count_homs_in_cases,num_hom_carriers_in_cases)
+  count_homs_in_controls <- c(count_homs_in_controls,num_hom_carriers_in_controls)
+  
+}# Next variant
+
+# Add results to the selected variants table
+#selected_variants.df <- cbind(selected_variants.df,
+ #                             count_homs_in_cases,
+  #                            names_homs_in_cases,
+   #                           count_homs_in_controls,
+    #                          names_homs_in_controls)
+
+# Clean-up
+rm(count_homs_in_cases,names_homs_in_cases,count_homs_in_controls,names_homs_in_controls,
+   hom_carriers_in_cases,hom_carriers_in_controls,num_hom_carriers_in_cases,num_hom_carriers_in_controls,
+   var)
+
+```
+
+# Get heteroozygous cariers in cases and controls
+
+```{r het_carriers}
+
+# Initialise vectors of hetozygous carriers
+names_hets_in_cases <- NULL
+names_hets_in_controls <- NULL
+count_hets_in_cases <- NULL
+count_hets_in_controls <- NULL
+
+# For each variant
+for(var in 1:nrow(genotypes_in_carriers.mx)){
+  
+  # Reset loop variables to NA
+  het_carriers_in_cases <- NA
+  het_carriers_in_controls <- NA
+
+  # Get heterozygous samples in cases and controls (make logical vectors)
+  het_carriers_in_cases <- phenotypes_in_carriers == 1 & genotypes_in_carriers.mx[var,] == 1
+  het_carriers_in_controls <- phenotypes_in_carriers == 0 & genotypes_in_carriers.mx[var,] == 1
+  
+  # Count heterozygous samples in cases and controls
+  num_het_carriers_in_cases <- sum(het_carriers_in_cases)
+  num_het_carriers_in_controls <- sum(het_carriers_in_controls)
+  
+  # Get names of the heterozygous samples in cases, if any (note using collapse instead of sep!)
+  if(num_het_carriers_in_cases > 0){
+    het_carriers_in_cases <- paste(carriers[het_carriers_in_cases], collapse=",")
+  }else{
+    het_carriers_in_cases <- NA
+  }
+
+  # Get names of the heterozygous samples in controls, if any (note using collapse instead of sep!)
+  if(num_het_carriers_in_controls > 0){
+    het_carriers_in_controls <- paste(carriers[het_carriers_in_controls], collapse=",")
+  }else{
+    het_carriers_in_controls <- NA
+  }
+  
+  # Add results to the output vectors
+  names_hets_in_cases <- c(names_hets_in_cases,het_carriers_in_cases)
+  names_hets_in_controls <- c(names_hets_in_controls,het_carriers_in_controls)
+  count_hets_in_cases <- c(count_hets_in_cases,num_het_carriers_in_cases)
+  count_hets_in_controls <- c(count_hets_in_controls,num_het_carriers_in_controls)
+  
+}# Next variant
+
+# Add results to the selected variants table
+#selected_variants.df <- cbind(selected_variants.df,
+ #                             count_hets_in_cases,
+  #                            names_hets_in_cases,
+   #                           count_hets_in_controls,
+    #                          names_hets_in_controls)
+
+# Clean-up
+rm(count_hets_in_cases,names_hets_in_cases,count_hets_in_controls,names_hets_in_controls,
+   het_carriers_in_cases,het_carriers_in_controls,num_het_carriers_in_cases,num_het_carriers_in_controls,
+   var, phenotypes_in_carriers, genotypes_in_carriers.mx, carriers)
+
+```
+
+# Save and clean-up 
+
+```{r final_section}
+
+# Print variants and carriers summary to html report
+selected_variants.df
+
+# Save table with variants
+write.table(selected_variants.df, 
+            file=paste(base_folder,"/scripts/",working_folder,"/",analysis_name,"_",gene,"_variants_summary.tsv",sep=""),
+            quote=F, sep="\t", col.names=T, row.names=T)
+
+# Save image
+save.image(paste(base_folder,"data",working_folder,"s02_FANCM_variants_and_carriers.RData",sep="/"))
+
+# Log
+ls()
+sessionInfo()
+Sys.time()
+
+# Clean-up
+rm(list=ls())
+graphics.off()
+gc()
+
+```

@@ -1,0 +1,215 @@
+---
+title: "Calculate HWE"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+last updated: cc21May2019  
+
+**Run this on Desktop Rstudio because it does not require much memory**
+
+# summary  
+
+Evaluate distribution and QQ-plots of HWE p values  
+
+Suggested filter: remove 2,184 variants violating HWE with p <= 0.001  
+
+Input and output data: 73,907 variants x 12,449 cases  
+
+# Start section
+
+```{r start}
+
+# Log time
+Sys.time()
+
+# Clean-up
+rm(list=ls())
+graphics.off()
+gc()
+
+# Libraries installed in system folders
+library(dplyr)
+library(QQperm)
+
+base_folder <- "/home/ccharalambous/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution"
+
+options(stringsAsFactors = F,
+        warnPartialMatchArgs = T, 
+        warnPartialMatchAttr = T, 
+        warnPartialMatchDollar = T)
+
+```
+
+# Load variants data frame
+
+```{r load_variants}
+
+load(paste(base_folder, "data/S12_explore_and_filter/s01_fixed_df.RData", sep="/"))
+dim(fixed.df)
+
+```
+
+# Suggest multi-allelic variants
+
+HWE has been calculated assuming that the variants were bi-allelic.  
+Thus, multiallelic variants need to ne excluded from HWE analysis.  
+
+There is no annotation directly indicating which variants had been multiallelic before splitting.  
+Therefore, such splitted multiallelic varaints may only be suggested on the basis of their positons.   
+A simple estimate may be based on the fact that variants, which share their position, are likely to be multi-allelic.  
+Although this simplistic method does not detect possible overlap of variants with upstream INDELs.  
+
+```{r get_possibly_multiallelics}
+
+# Make vector of variant positions in chromosome_position style
+var_pos <- paste(fixed.df$CHROM, fixed.df$POS, sep="_")
+length(var_pos)
+var_pos[1:5]
+
+# Duplicated positions (NOT including the first appearence!)
+dup_flag <- duplicated(var_pos)
+length(dup_flag)
+dup_flag[1:5]
+sum(dup_flag)
+
+# Actual positions of duplicated variants
+dup_pos <- var_pos[dup_flag]
+length(dup_pos)
+dup_pos[1:5]
+
+# Unique duplicated positions
+dup_pos <- unique(dup_pos)
+length(dup_pos)
+dup_pos[1:5]
+
+# Variants with duplicated positions: possibly multi-allelic
+possibly_multiallelic <- var_pos %in% dup_pos
+length(possibly_multiallelic)
+possibly_multiallelic[1:5]
+sum(possibly_multiallelic)
+
+# Add flag to fixed.df
+fixed.df <- cbind(fixed.df, possibly_multiallelic)
+
+# Clean-up
+rm(var_pos, dup_flag, dup_pos, possibly_multiallelic)
+
+```
+
+Remove HWE estimates for the possibly multiallelic variants
+
+```{r adjust_hwe}
+
+# Remove HWE p estimates
+sum(is.na(fixed.df$HWE))
+NA -> fixed.df[fixed.df$possibly_multiallelic, "HWE"]
+sum(is.na(fixed.df$HWE))
+
+```
+
+# Evaluate HWE
+
+```{r evaluate_awe}
+
+# Make a short handler for HWE data
+fixed.df$HWE <- as.numeric(fixed.df$HWE)
+sum(fixed.df$HWE==0, na.rm=T)
+
+# Descriptive statistics for HWE p-values
+hist(fixed.df$HWE)
+quantile(fixed.df$HWE, na.rm=T)
+
+# Explore low HWE
+bf_th <- 0.05/sum(!is.na(fixed.df$HWE)) # Bonferroni-based threshold for HWE filtering
+bf_th
+sum(fixed.df$HWE < bf_th, na.rm=T)
+
+# Count variants that would be removed at different thresholds
+sum(fixed.df$HWE < 1e-7, na.rm=T)
+sum(fixed.df$HWE < 1e-6, na.rm=T)
+sum(fixed.df$HWE < 1e-5, na.rm=T)
+sum(fixed.df$HWE < 1e-4, na.rm=T)
+sum(fixed.df$HWE < 1e-3, na.rm=T)
+
+# Clean-up (keep hwe and vars_bi.df)
+rm(bf_th)
+
+```
+
+# QQ-plot for all common hwe p-values
+
+There are variants grossly violating HWE, which need to be removed  
+
+```{r qq_plot}
+
+# Observed p-values for QQperm plot: dplyr-style subsetting of data frame
+p_observed <- fixed.df %>% 
+  filter(!is.na(HWE),            # Filters: exclude NA in hwe (required for QQ-plot)
+         HWE != 0,               #          exclude 0 (required for QQ-plot)
+         MAF >= 0.05) %>%        #          keep only common variants (rare variants are not informative for HWE)
+  select(HWE)                    # select hwe column only
+
+p_observed <- p_observed$HWE
+
+# Expected p-values for QQperm plot (assuming uniform p-values under the null) 
+p_expected <- ppoints(p_observed) # Provides "percentage points" equally distributed between 0 and 1 
+                                  # to emulate the uniform distribution of p-values
+
+
+estlambda2(p_observed, p_expected, filter=T, plot=T, main="HWE QQ-plot\nall common biallelic variants")
+
+rm(p_observed, p_expected)
+
+```
+
+# QQ-plot for common hwe p-values, after applying hwe filter p > 0.001
+
+Threshold of p > 0.001 removes most of the gross violators  
+
+```{r assess_threshold}
+
+# Threshold for filtering
+th <- 1e-3
+sum(fixed.df$HWE <= th, na.rm=T)
+
+# Observed p-values for QQperm plot
+p_observed <- fixed.df %>% 
+  filter(HWE > th,         # Filters: exclude variants deviating HWE at given threshold
+         MAF >= 0.05) %>%  #          keep only common variants (rare variants are not informative for HWE)
+  select(HWE)              # select hwe column only
+
+p_observed <- p_observed$HWE
+p_expected <- ppoints(p_observed)
+
+estlambda2(p_observed, p_expected, plot=T, main=paste("HWE QQ-plot\ncommon biallelic variants, HWE p-value >",th))
+
+# Clean up
+rm(p_observed, p_expected, th)
+
+```
+
+# Save the data
+
+```{r save}
+
+save(fixed.df, file=paste(base_folder,"data/S12_explore_and_filter/s02_fixed_df.RData",sep="/"))
+
+```
+
+# final section
+
+```{r final_section}
+
+# Log
+ls()
+sessionInfo()
+Sys.time()
+
+# Clean-up
+rm(list=ls())
+graphics.off()
+gc()
+
+```

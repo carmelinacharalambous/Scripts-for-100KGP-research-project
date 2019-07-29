@@ -1,0 +1,735 @@
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-047.gel.zone>
+Subject: Job 393647: </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_clinvar/s01_annotate_with_clinvar.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_clinvar/s01_annotate_with_clinvar.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Mon Mar 25 17:19:53 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-047.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Mon Mar 25 17:20:03 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_clinvar> was used as the working directory.
+Started at Mon Mar 25 17:20:03 2019
+Terminated at Mon Mar 25 17:20:16 2019
+Results reported at Mon Mar 25 17:20:16 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_clinvar/s01_annotate_with_clinvar.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   10.61 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   13 sec.
+    Turnaround time :                            23 sec.
+
+The output (if any) follows:
+
+Annotate with ClinVar
+Mon 25 Mar 17:20:04 GMT 2019
+
+
+--- Inlut and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S06_annotate_with_VEP/results/s01_vep.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_clinvar/results/s01_VEP_clinvar.vcf.gz
+clinvar_vcf: /public_data_resources/clinvar/20181028/clinvar/vcf_GRCh38/clinvar_20190219.vcf.gz
+
+Working...
+
+Done
+Mon 25 Mar 17:20:16 GMT 2019
+
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_clinvar/s01_annotate_with_clinvar.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-103.gel.zone>
+Subject: Job 458362: </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Tue Mar 26 18:26:23 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-103.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Tue Mar 26 18:26:25 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar> was used as the working directory.
+Started at Tue Mar 26 18:26:25 2019
+Terminated at Tue Mar 26 18:26:36 2019
+Results reported at Tue Mar 26 18:26:36 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   9.96 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   11 sec.
+    Turnaround time :                            13 sec.
+
+The output (if any) follows:
+
+Annotate with ClinVar
+Tue 26 Mar 18:26:25 GMT 2019
+
+
+--- Inlut and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/results/s01_VEP_clinvar.vcf.gz
+clinvar_vcf: /public_data_resources/clinvar/20181028/clinvar/vcf_GRCh38/clinvar_20190219.vcf.gz
+
+Working...
+
+Done
+Tue 26 Mar 18:26:36 GMT 2019
+
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-102.gel.zone>
+Subject: Job 18511: </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Fri Apr  5 17:02:00 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-102.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Fri Apr  5 17:02:01 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar> was used as the working directory.
+Started at Fri Apr  5 17:02:01 2019
+Terminated at Fri Apr  5 17:02:02 2019
+Results reported at Fri Apr  5 17:02:02 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time :                                   0.02 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   1 sec.
+    Turnaround time :                            2 sec.
+
+The output (if any) follows:
+
+Annotate with ClinVar
+Fri  5 Apr 17:02:02 BST 2019
+
+
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-041.gel.zone>
+Subject: Job 18512: </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Fri Apr  5 17:02:48 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-041.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Fri Apr  5 17:02:49 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar> was used as the working directory.
+Started at Fri Apr  5 17:02:49 2019
+Terminated at Fri Apr  5 17:02:49 2019
+Results reported at Fri Apr  5 17:02:49 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time :                                   0.02 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   0 sec.
+    Turnaround time :                            1 sec.
+
+The output (if any) follows:
+
+Annotate with ClinVar
+Fri  5 Apr 17:02:49 BST 2019
+
+
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-019.gel.zone>
+Subject: Job 18517: </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Fri Apr  5 17:04:00 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-019.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Fri Apr  5 17:04:03 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar> was used as the working directory.
+Started at Fri Apr  5 17:04:03 2019
+Terminated at Fri Apr  5 17:04:04 2019
+Results reported at Fri Apr  5 17:04:04 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time :                                   0.06 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   1 sec.
+    Turnaround time :                            4 sec.
+
+The output (if any) follows:
+
+Annotate with ClinVar
+Fri  5 Apr 17:04:03 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/results/s01_VEP_clinvar.vcf.gz
+clinvar_vcf: /public_data_resources/clinvar/20181028/clinvar/vcf_GRCh38/clinvar.vcf.gz
+
+Working...
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-011.gel.zone>
+Subject: Job 18526: </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Fri Apr  5 17:06:08 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-011.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Fri Apr  5 17:06:09 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar> was used as the working directory.
+Started at Fri Apr  5 17:06:09 2019
+Terminated at Fri Apr  5 17:06:10 2019
+Results reported at Fri Apr  5 17:06:10 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time :                                   0.03 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   1 sec.
+    Turnaround time :                            2 sec.
+
+The output (if any) follows:
+
+Annotate with ClinVar
+Fri  5 Apr 17:06:10 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/results/s01_VEP_clinvar.vcf.gz
+clinvar_vcf: /public_data_resources/clinvar/20181028/clinvar/vcf_GRCh38/clinvar.vcf.gz
+
+Working...
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-007.gel.zone>
+Subject: Job 18533: </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Fri Apr  5 17:07:57 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-007.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Fri Apr  5 17:08:01 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar> was used as the working directory.
+Started at Fri Apr  5 17:08:01 2019
+Terminated at Fri Apr  5 17:08:02 2019
+Results reported at Fri Apr  5 17:08:02 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time :                                   0.02 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   1 sec.
+    Turnaround time :                            5 sec.
+
+The output (if any) follows:
+
+Annotate with ClinVar
+Fri  5 Apr 17:08:02 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/results/s01_VEP_clinvar.vcf.gz
+clinvar_vcf: /public_data_resources/clinvar/20181028/clinvar/vcf_GRCh38/clinvar.vcf.gz
+
+Working...
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-036.gel.zone>
+Subject: Job 18571: </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Fri Apr  5 17:22:00 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-036.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Fri Apr  5 17:22:03 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar> was used as the working directory.
+Started at Fri Apr  5 17:22:03 2019
+Terminated at Fri Apr  5 17:22:16 2019
+Results reported at Fri Apr  5 17:22:16 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   9.32 sec.
+    Max Memory :                                 10 MB
+    Average Memory :                             10.00 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   148 MB
+    Max Processes :                              4
+    Max Threads :                                5
+    Run time :                                   13 sec.
+    Turnaround time :                            16 sec.
+
+The output (if any) follows:
+
+Annotate with ClinVar
+Fri  5 Apr 17:22:04 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/results/s01_VEP_clinvar.vcf.gz
+clinvar_vcf: /public_data_resources/clinvar/20181028/clinvar/vcf_GRCh38/clinvar.vcf.gz
+
+Working...
+
+Done
+Fri  5 Apr 17:22:16 BST 2019
+
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-010.gel.zone>
+Subject: Job 48671: </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Mon Apr  8 13:02:09 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-010.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Mon Apr  8 13:02:14 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar> was used as the working directory.
+Started at Mon Apr  8 13:02:14 2019
+Terminated at Mon Apr  8 13:02:58 2019
+Results reported at Mon Apr  8 13:02:58 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   9.54 sec.
+    Max Memory :                                 10 MB
+    Average Memory :                             10.00 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   150 MB
+    Max Processes :                              4
+    Max Threads :                                5
+    Run time :                                   44 sec.
+    Turnaround time :                            49 sec.
+
+The output (if any) follows:
+
+Annotate with ClinVar
+Mon  8 Apr 13:02:15 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/results/s01_VEP_clinvar.vcf.gz
+clinvar_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/clinvar_update/clinvar_20190219_updated.vcf.gz
+
+Working...
+
+Done
+Mon  8 Apr 13:02:58 BST 2019
+
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S08_annotate_with_clinvar/s01_annotate_with_clinvar.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-078.gel.zone>
+Subject: Job 510052: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed May  8 17:41:02 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-078.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed May  8 17:41:15 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar> was used as the working directory.
+Started at Wed May  8 17:41:15 2019
+Terminated at Wed May  8 17:41:16 2019
+Results reported at Wed May  8 17:41:16 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh
+------------------------------------------------------------
+
+Exited with exit code 255.
+
+Resource usage summary:
+
+    CPU time :                                   0.03 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   1 sec.
+    Turnaround time :                            14 sec.
+
+The output (if any) follows:
+
+Annotate with ClinVar
+Wed  8 May 17:41:16 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/s01_vep.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S08_annotate_with_clinvar/s01_VEP_clinvar.vcf.gz
+clinvar_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/clinvar_update/clinvar_20190219_updated.vcf.gz
+
+Working...
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-038.gel.zone>
+Subject: Job 510055: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed May  8 17:45:35 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-038.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed May  8 17:45:43 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar> was used as the working directory.
+Started at Wed May  8 17:45:43 2019
+Terminated at Wed May  8 17:45:43 2019
+Results reported at Wed May  8 17:45:43 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh
+------------------------------------------------------------
+
+Exited with exit code 255.
+
+Resource usage summary:
+
+    CPU time :                                   0.03 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   1 sec.
+    Turnaround time :                            8 sec.
+
+The output (if any) follows:
+
+Annotate with ClinVar
+Wed  8 May 17:45:43 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S08_annotate_with_clinvar/s01_VEP_clinvar.vcf.gz
+clinvar_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/clinvar_update/clinvar_20190219_updated.vcf.gz
+
+Working...
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-051.gel.zone>
+Subject: Job 510100: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed May  8 17:53:12 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-051.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed May  8 17:53:55 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar> was used as the working directory.
+Started at Wed May  8 17:53:55 2019
+Terminated at Wed May  8 17:53:56 2019
+Results reported at Wed May  8 17:53:56 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh
+------------------------------------------------------------
+
+Exited with exit code 255.
+
+Resource usage summary:
+
+    CPU time :                                   0.04 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   1 sec.
+    Turnaround time :                            44 sec.
+
+The output (if any) follows:
+
+Annotate with ClinVar
+Wed  8 May 17:53:56 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S08_annotate_with_clinvar/s01_VEP_clinvar.vcf.gz
+clinvar_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/clinvar_update/clinvar_20190219_updated.vcf.gz
+
+Working...
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-051.gel.zone>
+Subject: Job 510122: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed May  8 17:58:41 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-051.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed May  8 17:59:47 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar> was used as the working directory.
+Started at Wed May  8 17:59:47 2019
+Terminated at Wed May  8 17:59:53 2019
+Results reported at Wed May  8 17:59:53 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with exit code 130.
+
+Resource usage summary:
+
+    CPU time :                                   5.46 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   6 sec.
+    Turnaround time :                            72 sec.
+
+The output (if any) follows:
+
+Annotate with ClinVar
+Wed  8 May 17:59:47 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S08_annotate_with_clinvar/s01_VEP_clinvar.vcf.gz
+clinvar_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/clinvar_update/clinvar_20190219_updated.vcf.gz
+
+Working...
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-078.gel.zone>
+Subject: Job 510231: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed May  8 18:00:16 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-078.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed May  8 18:00:54 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar> was used as the working directory.
+Started at Wed May  8 18:00:54 2019
+Terminated at Wed May  8 18:22:59 2019
+Results reported at Wed May  8 18:22:59 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   1274.84 sec.
+    Max Memory :                                 30 MB
+    Average Memory :                             26.44 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   169 MB
+    Max Processes :                              4
+    Max Threads :                                5
+    Run time :                                   1325 sec.
+    Turnaround time :                            1363 sec.
+
+The output (if any) follows:
+
+Annotate with ClinVar
+Wed  8 May 18:00:55 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S08_annotate_with_clinvar/s01_VEP_clinvar.vcf.gz
+clinvar_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/clinvar_update/clinvar_20190219_updated.vcf.gz
+
+Working...
+
+Done
+Wed  8 May 18:22:59 BST 2019
+
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S08_annotate_with_clinvar/s01_annotate_with_clinvar.err> for stderr output of this job.
+

@@ -1,0 +1,196 @@
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-142.gel.zone>
+Subject: Job 379225: </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S05_bcf_stats/bcftools_stat.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S05_bcf_stats/bcftools_stat.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Tue Mar 19 14:12:14 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-142.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Tue Mar 19 14:12:16 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S05_bcf_stats> was used as the working directory.
+Started at Tue Mar 19 14:12:16 2019
+Terminated at Tue Mar 19 14:12:26 2019
+Results reported at Tue Mar 19 14:12:26 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S05_bcf_stats/bcftools_stat.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   3.95 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   10 sec.
+    Turnaround time :                            12 sec.
+
+The output (if any) follows:
+
+Calculate and plot bcftools stats
+Tue 19 Mar 14:12:17 GMT 2019
+
+Calculating stats...
+Making plots...
+
+Done
+Tue 19 Mar 14:12:26 GMT 2019
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S05_bcf_stats/bcftools_stat.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-079.gel.zone>
+Subject: Job 266368: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S05_bcf_stats/bcftools_stat.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S05_bcf_stats/bcftools_stat.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed Apr 17 23:39:41 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-079.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed Apr 17 23:39:47 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S05_bcf_stats> was used as the working directory.
+Started at Wed Apr 17 23:39:47 2019
+Terminated at Wed Apr 17 23:39:56 2019
+Results reported at Wed Apr 17 23:39:56 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S05_bcf_stats/bcftools_stat.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   3.28 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   9 sec.
+    Turnaround time :                            15 sec.
+
+The output (if any) follows:
+
+Calculate and plot bcftools stats
+Wed 17 Apr 23:39:47 BST 2019
+
+Calculating stats...
+Making plots...
+
+Done
+Wed 17 Apr 23:39:56 BST 2019
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S05_bcf_stats/bcftools_stat.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-076.gel.zone>
+Subject: Job 460857: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S05_bcf_stats/bcftools_stat.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S05_bcf_stats/bcftools_stat.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Mon May  6 18:21:02 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-076.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Mon May  6 18:21:07 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S05_bcf_stats> was used as the working directory.
+Started at Mon May  6 18:21:07 2019
+Terminated at Mon May  6 18:21:15 2019
+Results reported at Mon May  6 18:21:15 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S05_bcf_stats/bcftools_stat.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   2.74 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   8 sec.
+    Turnaround time :                            13 sec.
+
+The output (if any) follows:
+
+Calculate and plot bcftools stats
+Mon  6 May 18:21:07 BST 2019
+
+Calculating stats...
+Making plots...
+
+Done
+Mon  6 May 18:21:15 BST 2019
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S05_bcf_stats/bcftools_stat.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-077.gel.zone>
+Subject: Job 490876: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S05_bcf_stats/bcftools_stat.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S05_bcf_stats/bcftools_stat.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Tue May  7 16:56:45 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-077.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Tue May  7 16:56:46 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S05_bcf_stats> was used as the working directory.
+Started at Tue May  7 16:56:46 2019
+Terminated at Tue May  7 16:59:20 2019
+Results reported at Tue May  7 16:59:20 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S05_bcf_stats/bcftools_stat.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   113.75 sec.
+    Max Memory :                                 8 MB
+    Average Memory :                             8.00 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   148 MB
+    Max Processes :                              4
+    Max Threads :                                5
+    Run time :                                   154 sec.
+    Turnaround time :                            155 sec.
+
+The output (if any) follows:
+
+Calculate and plot bcftools stats
+Tue  7 May 16:56:50 BST 2019
+
+Calculating stats...
+Making plots...
+
+Done
+Tue  7 May 16:59:20 BST 2019
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S05_bcf_stats/bcftools_stat.err> for stderr output of this job.
+

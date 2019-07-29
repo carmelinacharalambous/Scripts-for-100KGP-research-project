@@ -1,0 +1,551 @@
+---
+title: "Consolidate dataset"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+started: CC30May2019  
+last updated: CC05Jun2019  
+
+# Summary  
+
+Consolidating, exploring and filtering the joined dataset of all available groups and controls  
+
+- Read data  
+read filtered genotypes and variants  
+read phenotypes  
+read eigenvectors  
+read list of selected samples  
+
+- Keep only selected samples (and keep tables in sync !)  
+rombine phenotypes and eigenvectors  
+
+- Explore phenotypes: Eethnicity,Group,Age,Gender  
+remove case of 368 years old  
+remove 2 controls with Indeterminate gender  
+
+- Check ac/an/af and call rates for variants    
+remove variants with zero AC in the remaining cases  
+
+- Check pathogenecity in ClinVar  
+remove FIM variants if they are benign, VUS or Contradicting in ClinVar  
+remove LoF variants if they are benign in ClinVar  
+
+- Check variant counts per gene  
+remove irrelevant genes (SETX)  
+
+- Check missing rates in genotypes  
+
+Input data: 475 variants x 12,449 cases  
+Output data: 189 variants x 8,389 cases  
+
+# Start section
+
+<style>
+pre {
+  overflow-x: auto;
+}
+pre code {
+  word-wrap: normal;
+  white-space: pre;
+}
+</style>
+
+```{r set_width, echo=F}
+
+options(width = 999)
+
+```
+
+```{r start}
+
+# Log time
+Sys.time()
+
+# Clean-up
+rm(list=ls())
+graphics.off()
+gc()
+
+base_folder <- "/home/ccharalambous/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution"
+
+options(stringsAsFactors = F,
+        warnPartialMatchArgs = T, 
+        warnPartialMatchAttr = T, 
+        warnPartialMatchDollar = T)
+
+library(tidyr)
+library(dplyr)
+library(VennDiagram)
+library(gridExtra)
+
+```
+
+# Read data
+
+### Load genotype and variants data  
+
+```{r load_data}
+
+# Load
+load(paste(base_folder,"data/S12_explore_and_filter/s05_filter_by_QC_metrics.RData",sep="/"))
+
+# Check
+dim(genotypes.mx)
+genotypes.mx[1:5,1:5]
+
+dim(variants.df)
+variants.df[1:5,1:5]
+
+sum(rownames(variants.df) != rownames(genotypes.mx))
+
+```
+
+### Read phenotype data
+
+```{r}
+
+# Load
+load(paste(base_folder,"data/S12_explore_and_filter/s06_explore_and_update_phenotypes.RData",sep="/"))
+
+# Check 
+dim(phenotypes.df)
+colnames(phenotypes.df)
+phenotypes.df[1:5,1:5]
+
+# Select and rename columns
+phenotypes.df <-phenotypes.df[,c("Platekey", "ds", "age", "Participant.Phenotypic.Sex","Participant.Ethnic.Category")]
+c("Platekey", "Group", "Age", "Sex","Ethnicity") -> colnames(phenotypes.df)
+
+# Assign rownames
+rownames(phenotypes.df) <- phenotypes.df$Platekey
+phenotypes.df[1:5,]
+
+```
+
+### Read eigenvectors
+
+```{r}
+
+# Rhad
+eigenvectors_file <- 
+  paste(base_folder,"data/S14_gel_only_PCA/s02_calculate_eigenvectors/p03_thinn_and_pca/gel_only_10kv_100PCs.eigenvec",sep="/")
+
+eigenvectors.df <- read.table(eigenvectors_file, header = T)
+dim(eigenvectors.df)
+eigenvectors.df[1:5,1:5]
+
+# Assign rownames and keep only 5 top eigenvectors
+rownames(eigenvectors.df) <- eigenvectors.df[,1]
+eigenvectors.df <- eigenvectors.df[,3:7]
+eigenvectors.df[1:5,]
+
+# Clean-up
+rm(eigenvectors_file)
+
+```
+
+### Read samples selected after removal of ev-outliers 
+
+```{r}
+
+# Read and check
+samples_file <- paste(base_folder,"data/S14_gel_only_PCA/s03_make_PCA_plots/selected_samples_3sd_5pc.txt",sep="/")
+selected_samples <- read.table(samples_file, header = F)
+selected_samples <- selected_samples$V1
+length(selected_samples)
+
+# Clean-up
+rm(samples_file)
+
+```
+
+# Keep only selected samples
+
+Note that all tables are kept in sync !  
+
+```{r}
+
+# Update genotypes
+dim(genotypes.mx)
+genotypes.mx <- genotypes.mx[,selected_samples]
+dim(genotypes.mx)
+genotypes.mx[1:5,1:5]
+
+# Update phenotypes
+dim(phenotypes.df)
+phenotypes.df <- phenotypes.df[selected_samples,]
+dim(phenotypes.df)
+phenotypes.df[1:5,1:5]
+
+# Update eigenvectors
+dim(eigenvectors.df)
+eigenvectors.df <- eigenvectors.df[selected_samples,]
+dim(eigenvectors.df)
+eigenvectors.df[1:5,1:5]
+
+# Combine eigenvectors and phenotypes
+phenotypes.df <- cbind(phenotypes.df,eigenvectors.df)
+dim(phenotypes.df)
+
+# Clean-up
+rm(eigenvectors.df, selected_samples)
+
+```
+
+# Explore and update phenotypes
+
+### Check and remove ethnicity
+
+```{r}
+
+table(phenotypes.df$Ethnicity)
+phenotypes.df <- phenotypes.df %>% select(-Ethnicity)
+
+```
+
+### Group
+
+```{r}
+
+sum(is.na(phenotypes.df$Group))
+sort(table(phenotypes.df$Group),decreasing = T)
+
+```
+
+### Age
+
+```{r}
+
+# Check missed data
+sum(is.na(phenotypes.df$Age))
+
+# Overall distributions
+hist(phenotypes.df$Age, lab=T, ylim=c(0,3500))
+hist(phenotypes.df$Age[phenotypes.df$Age < 105], lab=T, ylim=c(0,1100))
+head(sort(phenotypes.df$Age), n=10)
+tail(sort(phenotypes.df$Age), n=10)
+
+# Ages per group
+x <- phenotypes.df %>% 
+      group_by(Group) %>% 
+      summarise(count=n(),min_age=min(Age),mean_age=round(mean(Age)),max_age=max(Age)) %>% 
+      arrange(desc(count))
+
+as.data.frame(x)
+
+# Remove case with wrong age (it might also be substituted to mean age etc)
+wrong_age <- phenotypes.df$Age == 368
+phenotypes.df <- phenotypes.df[!wrong_age,]
+genotypes.mx <- genotypes.mx[,!wrong_age]
+
+# Clean-up
+rm(x, wrong_age)
+
+```
+
+### Gender
+
+```{r}
+
+# Check misseed data
+sum(is.na(phenotypes.df$Sex))
+
+# Overall counts
+table(phenotypes.df$Sex)
+
+# Counts per group
+x <- phenotypes.df %>% 
+      group_by(Group) %>% 
+      summarise(count=n(),female=sum(Sex=="Female"),male=sum(Sex=="Male"),indeterminate=sum(Sex=="Indeterminate")) %>% 
+      arrange(desc(count))
+
+as.data.frame(x)
+
+# Remove cases with indeterminate gender
+indeterminate_gender <- phenotypes.df$Sex=="Indeterminate"
+phenotypes.df <- phenotypes.df[!indeterminate_gender,]
+genotypes.mx <- genotypes.mx[,!indeterminate_gender]
+
+rm(x, indeterminate_gender)
+
+```
+
+### Repeat age and gender summaries after removal of the 3 samples  
+
+```{r}
+
+# Ages histogram
+hist(phenotypes.df$Age[phenotypes.df$Age < 105], lab=T, ylim=c(0,1100),
+     main="Histogram of age (all available groups and controls)",
+     xlab="Years")
+
+# Ages per group
+x <- phenotypes.df %>% 
+      group_by(Group) %>% 
+      summarise(count=n(),min_age=min(Age),mean_age=round(mean(Age)),max_age=max(Age)) %>% 
+      arrange(desc(count))
+
+as.data.frame(x)
+
+# Genders per group
+x <- phenotypes.df %>% 
+      group_by(Group) %>% 
+      summarise(count=n(),female=sum(Sex=="Female"),male=sum(Sex=="Male"),indeterminate=sum(Sex=="Indeterminate")) %>% 
+      arrange(desc(count))
+
+as.data.frame(x)
+
+# Clean-up
+rm(x)
+
+```
+
+# Explore and update variants
+
+### Remove variants with zero AC in the remained cases
+
+```{r}
+
+# Calcilate ac
+ac <- apply(genotypes.mx, 1, sum,na.rm=T)
+
+# Identify variants to remove
+sum(is.na(ac))
+zero_ac <- ac == 0
+sum(zero_ac)
+
+# Remove variants
+variants.df <- variants.df[!zero_ac,]
+genotypes.mx <- genotypes.mx[!zero_ac,]
+
+# Clean-up
+rm(ac, zero_ac)
+
+```
+
+## Remove FIM and LoF variants that are not pathogenic in ClinVar
+
+### ExploreVlinVar
+
+```{r}
+
+# Review data from ClinVar
+table(variants.df$CLNSIG)
+
+# Questionable PALB2 variant (included after MT's review)
+variants.df %>% 
+  filter(CLNSIG=="Conflicting_interpretations_of_pathogenicity,_risk_factor")%>% 
+  select(CHROM,POS,REF,ALT,Existing_variation,VARIANT_CLASS,SYMBOL,Consequence,gnomAD_NFE_AF,CLNSIG)
+
+```
+
+### Remove FIM variants (SIFT+PolyPhen+CADD) that are non-pathogenic in ClinVar
+
+```{r}
+
+# Define variants to exclude from FIM (judjing by lack of pathogenecity in ClinVar annotation)
+non_pathogenic_ClinVar_for_FIM <- c("Benign", "Benign/Likely_benign", "Likely_benign",
+                            "Conflicting_interpretations_of_pathogenicity","Uncertain_significance")
+
+# Explore FIM variants that will be excluded
+variants.df %>% 
+  filter(CLNSIG %in% non_pathogenic_ClinVar_for_FIM & FIM == T) %>%
+  group_by(CLNSIG) %>% 
+  summarise(count=n()) %>% 
+  arrange(desc(count))
+
+# Get index for the non-pathogenic variants
+non_pathogenic_FIM <- variants.df$FIM == T & variants.df$CLNSIG %in% non_pathogenic_ClinVar_for_FIM
+sum(non_pathogenic_FIM)
+
+# Exclude the non-pathogenic variants
+variants.df <- variants.df[!non_pathogenic_FIM,]
+genotypes.mx <- genotypes.mx[!non_pathogenic_FIM,]
+
+# Clean-up
+rm(non_pathogenic_FIM, non_pathogenic_ClinVar_for_FIM)
+
+```
+
+### Remove LoF variants that are non-pathogenic in ClinVar
+
+```{r}
+
+# Define variants to exclude from LoF (judjing by lack of pathogenecity in ClinVar annotation)
+non_pathogenic_ClinVar_for_LoF <- c("Benign", "Benign/Likely_benign", "Likely_benign")
+
+# Explore LoF variants that will be excluded
+non_pathogenic_LoF <- variants.df$LoF == T & variants.df$CLNSIG %in% non_pathogenic_ClinVar_for_LoF
+sum(non_pathogenic_LoF)
+variants.df[non_pathogenic_LoF,c("CHROM","POS","REF","ALT","Existing_variation","SYMBOL","Consequence","CLNSIG","CLNDN")]
+
+# Exclude the non-pathogenic variants
+variants.df <- variants.df[!non_pathogenic_LoF,]
+genotypes.mx <- genotypes.mx[!non_pathogenic_LoF,]
+
+# Clean-up
+rm(non_pathogenic_LoF, non_pathogenic_ClinVar_for_LoF)
+
+```
+
+### Explore genes and remove variants in irrelevant genes
+
+```{r}
+
+# Variant counts per gene
+x <- variants.df %>% 
+       group_by(SYMBOL) %>% 
+       summarise(count=n()) %>% 
+       arrange(desc(count))
+
+as.data.frame(x)
+
+# Explore SETX (just out of of curiosity, not related to FA)
+variants.df %>% 
+  filter(SYMBOL == "SETX") %>% 
+  select(SYMBOL,Existing_variation,Consequence,gnomAD_NFE_AF,CLNSIG,CLNDN)
+
+# Exclude irrelevant genes
+irrelevant_genes <- c("SETX","FBXO6","POLG")
+variants_in_irrelevant_genes <- variants.df$SYMBOL %in% irrelevant_genes
+sum(variants_in_irrelevant_genes)
+
+variants.df <- variants.df[!variants_in_irrelevant_genes,]
+genotypes.mx <- genotypes.mx[!variants_in_irrelevant_genes,]
+
+# Clean-up
+rm(irrelevant_genes, variants_in_irrelevant_genes, x)
+
+```
+
+### Summary of the pathogenecity criteria after excluding irrelevant genes and non-pathogenic variants
+
+```{r}
+
+# Review data from ClinVar
+table(variants.df$CLNSIG)
+sort(table(variants.df$CLNDN), decreasing = T)
+
+# Review other criteria of pathogenicity
+table(variants.df$IMPACT)
+table(variants.df$Consequence)
+table(variants.df$SIFT_call)
+table(variants.df$PolyPhen_call)
+
+# Unexpected IMPACT and PolyPhen_call
+variants.df %>% 
+  filter(IMPACT == "LOW" | PolyPhen_call == "possibly_damaging") %>% 
+  select(CHROM,POS,REF,ALT,Existing_variation,SYMBOL,Consequence,IMPACT,PolyPhen_call,gnomAD_NFE_AF,CLNSIG)
+
+# Venn diagram for the pathogenecity criteria in the remaining variants
+
+ClinVar <- variants.df$ClinVar
+LoF <- variants.df$LoF
+FIM <- variants.df$FIM
+
+# Prepare  intersects
+ClinVar_LoF <- ClinVar & LoF
+LoF_FIM <- LoF & FIM
+ClinVar_FIM <- ClinVar & FIM 
+ClinVar_LoF_FIM <- ClinVar & LoF & FIM
+
+# Plot Venn diagram
+g <- draw.triple.venn(
+      area1=sum(ClinVar), 
+      area2=sum(LoF), 
+      area3=sum(FIM), 
+      n12=sum(ClinVar_LoF), 
+      n23=sum(LoF_FIM), 
+      n13=sum(ClinVar_FIM),
+      n123=sum(ClinVar_LoF_FIM),
+      category=c(
+        paste("ClinVar:", sum(ClinVar)),
+        paste("LoF:", sum(LoF)),
+        paste("FIM:", sum(FIM))),
+      fill = c("red", "green", "blue"), 
+      alpha = c(0.3, 0.3, 0.3),
+      cex=2, cat.fontface=4, fontfamily=3,
+      cat.pos = c(0,0,0), ind=F)
+
+grid.arrange(gTree(children=g), top="\n Pathogenecity of selected variants (all available groups and controls)")
+
+# Clean-up
+rm(ClinVar, LoF, FIM, ClinVar_LoF, LoF_FIM, ClinVar_FIM, ClinVar_LoF_FIM, g)
+
+```
+
+### Recalculate ac-an-af
+
+```{r}
+
+# Function to calculate an
+an.udf <- function(x){2*sum(!is.na(x))}
+
+# Calculate
+interim_ac <- apply(genotypes.mx, 1, sum, na.rm=T)
+interim_an <- apply(genotypes.mx, 1, an.udf)
+interim_af <- interim_ac/interim_an
+
+# Evaluate
+quantile(interim_ac)
+quantile(interim_an)
+quantile(interim_af)
+
+hist(interim_af, lab=T, ylim=c(0,120), 
+     main="Histogram of AF (all available groups and controls)",
+     xlab="AF")
+
+# Add to the varoiants table
+variants.df <- data.frame(variants.df,interim_ac,interim_an,interim_af)
+
+# Clean-up
+rm(an.udf,interim_ac,interim_an,interim_af)
+
+```
+
+### Explore call rates per variant
+
+```{r}
+
+call_rate.udf <- function(x){sum(!is.na(x))/length(x)}
+call_rates <- apply(genotypes.mx, 1, call_rate.udf)
+quantile(call_rates)
+rm(call_rate.udf,call_rates)
+
+```
+
+# Explore missingness in genotypes
+
+```{r}
+
+# Missingness
+sum(is.na(genotypes.mx)) / (nrow(genotypes.mx)*ncol(genotypes.mx))
+
+```
+
+# Save results
+
+```{r save}
+
+save(genotypes.mx, phenotypes.df, variants.df, 
+     file=paste(base_folder,"data/S15_consolidate_dataset/s01_consolidate_dataset.RData",sep="/"))
+
+```
+
+# Final section
+
+```{r final_section}
+
+# Log
+ls()
+sessionInfo()
+Sys.time()
+
+# Clean-up
+rm(list=ls())
+graphics.off()
+gc()
+
+```

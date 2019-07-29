@@ -1,0 +1,77 @@
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-026.gel.zone>
+Subject: Job 720373: </re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/scripts/s13_add_eigenvectors/s03_merge_gel_and_1kg/s01_merge_gel_and_1kg.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/scripts/s13_add_eigenvectors/s03_merge_gel_and_1kg/s01_merge_gel_and_1kg.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <alarionov> in cluster <pegasus> at Tue May 21 06:49:26 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-026.gel.zone>, in queue <gecip>, as user <alarionov> in cluster <pegasus> at Tue May 21 06:49:27 2019
+</home/alarionov> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/scripts/s13_add_eigenvectors/s03_merge_gel_and_1kg> was used as the working directory.
+Started at Tue May 21 06:49:27 2019
+Terminated at Tue May 21 09:05:43 2019
+Results reported at Tue May 21 09:05:43 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/scripts/s13_add_eigenvectors/s03_merge_gel_and_1kg/s01_merge_gel_and_1kg.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   8167.61 sec.
+    Max Memory :                                 30 MB
+    Average Memory :                             17.98 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   181 MB
+    Max Processes :                              7
+    Max Threads :                                8
+    Run time :                                   8180 sec.
+    Turnaround time :                            8177 sec.
+
+The output (if any) follows:
+
+Merge gel_and 1kg vcfs for PCA
+Tue May 21 06:49:28 BST 2019
+
+
+scripts_folder: /re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/scripts/s13_add_eigenvectors/s03_merge_gel_and_1kg
+sourse_1kg_vcf: /re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/data/s13_add_eigenvectors/s01_copy_sourse_data/all_1kg_100kv_b38_genotypes_filtered.vcf.gz
+sourse_gel_vcf: /re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/data/s13_add_eigenvectors/s02_select_gel_samples/selected_gel_cases_filtered_b38_genotypes.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/data/s13_add_eigenvectors/s03_merge_gel_and_1kg/gel_1kg_b38_genotypes.vcf.gz
+
+Loaded accessory functions
+
+Get 1kg variants present in gel ...
+Tue May 21 06:59:21 BST 2019
+
+Number of variants and samples in the input and output VCF files:
+Sourse 1kg: 100,000 x 2,504
+Intersect 1kg: 99,476 x 2,504
+
+Merging 1kg and gel VCFs ...
+Tue May 21 07:40:45 BST 2019
+
+Number of variants and samples in the input and output files:
+Sourse 1kg: 99,476 x 2,504
+Sourse GEL: 99,476 x 12,449
+Merged: 99,476 x 14,953
+
+Filtering merged file ...
+Tue May 21 08:42:05 BST 2019
+
+Number of variants and samples in the input and output files:
+Raw merged file: 99,476 x 14,953
+Filtered merged file: 99,476 x 14,953
+
+Done
+Tue May 21 09:05:43 BST 2019
+
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/scripts/s13_add_eigenvectors/s03_merge_gel_and_1kg/s01_merge_gel_and_1kg.err> for stderr output of this job.
+

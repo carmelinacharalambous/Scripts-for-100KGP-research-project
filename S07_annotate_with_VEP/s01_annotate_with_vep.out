@@ -1,0 +1,697 @@
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-139.gel.zone>
+Subject: Job 458266: </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_VEP/s01_annotate_with_vep.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_VEP/s01_annotate_with_vep.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Tue Mar 26 18:17:45 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-139.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Tue Mar 26 18:17:52 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_VEP> was used as the working directory.
+Started at Tue Mar 26 18:17:52 2019
+Terminated at Tue Mar 26 18:24:19 2019
+Results reported at Tue Mar 26 18:24:19 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_VEP/s01_annotate_with_vep.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   376.71 sec.
+    Max Memory :                                 2611 MB
+    Average Memory :                             1529.71 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   2817 MB
+    Max Processes :                              7
+    Max Threads :                                8
+    Run time :                                   388 sec.
+    Turnaround time :                            394 sec.
+
+The output (if any) follows:
+
+Annotate with VEP
+Tue 26 Mar 18:17:52 GMT 2019
+
+
+--- Inlut and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S06_filter_by_qual/filtered_by_qual.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+vep_log: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_VEP/results/vep_annotation.log
+vep_report: /re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_VEP/results/vep_report.html
+
+--- Data sources ---
+
+See used VEP cache description in the following file:
+
+
+Used CADD annotation files:
+/public_data_resources/CADD/v1.4/GRCh38/whole_genome_SNVs.tsv.gz
+/public_data_resources/CADD/v1.4/GRCh38/InDels.tsv.gz
+
+Working...
+Done
+Tue 26 Mar 18:24:19 GMT 2019
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Execution_2_March/S07_annotate_with_VEP/s01_annotate_with_vep.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-039.gel.zone>
+Subject: Job 460863: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Mon May  6 18:50:18 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-039.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Mon May  6 18:50:29 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP> was used as the working directory.
+Started at Mon May  6 18:50:29 2019
+Terminated at Mon May  6 18:59:37 2019
+Results reported at Mon May  6 18:59:37 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   441.42 sec.
+    Max Memory :                                 2614 MB
+    Average Memory :                             1436.34 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   2817 MB
+    Max Processes :                              7
+    Max Threads :                                8
+    Run time :                                   548 sec.
+    Turnaround time :                            559 sec.
+
+The output (if any) follows:
+
+Annotate with VEP
+Mon  6 May 18:50:30 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S06_filter_by_qual/filtered_by_qual.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+vep_log: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_annotation.log
+vep_report: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_report.html
+
+--- Data sources ---
+
+See used VEP cache description in the following file:
+
+
+Used CADD annotation files:
+/public_data_resources/CADD/v1.4/GRCh38/whole_genome_SNVs.tsv.gz
+/public_data_resources/CADD/v1.4/GRCh38/InDels.tsv.gz
+
+Working...
+Done
+Mon  6 May 18:59:37 BST 2019
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-058.gel.zone>
+Subject: Job 491027: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Tue May  7 17:58:23 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-058.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Tue May  7 17:58:37 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP> was used as the working directory.
+Started at Tue May  7 17:58:37 2019
+Terminated at Tue May  7 19:15:02 2019
+Results reported at Tue May  7 19:15:02 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   3235.45 sec.
+    Max Memory :                                 7449 MB
+    Average Memory :                             6536.74 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   7764 MB
+    Max Processes :                              7
+    Max Threads :                                8
+    Run time :                                   4585 sec.
+    Turnaround time :                            4599 sec.
+
+The output (if any) follows:
+
+Annotate with VEP
+Tue  7 May 17:58:43 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S06_filter_by_qual/filtered_by_qual.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+vep_log: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_annotation.log
+vep_report: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_report.html
+
+--- Data sources ---
+
+See used VEP cache description in the following file:
+
+
+Used CADD annotation files:
+/public_data_resources/CADD/v1.4/GRCh38/whole_genome_SNVs.tsv.gz
+/public_data_resources/CADD/v1.4/GRCh38/InDels.tsv.gz
+
+Working...
+Done
+Tue  7 May 19:15:02 BST 2019
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-147.gel.zone>
+Subject: Job 496822: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed May  8 11:21:15 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-147.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed May  8 11:21:25 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP> was used as the working directory.
+Started at Wed May  8 11:21:25 2019
+Terminated at Wed May  8 11:22:47 2019
+Results reported at Wed May  8 11:22:47 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with exit code 130.
+
+Resource usage summary:
+
+    CPU time :                                   59.18 sec.
+    Max Memory :                                 2239 MB
+    Average Memory :                             1995.11 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   2497 MB
+    Max Processes :                              7
+    Max Threads :                                8
+    Run time :                                   82 sec.
+    Turnaround time :                            92 sec.
+
+The output (if any) follows:
+
+Annotate with VEP
+Wed  8 May 11:21:25 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S06_filter_by_qual/filtered_by_qual.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+vep_log: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_annotation.log
+vep_report: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_report.html
+
+--- Data sources ---
+
+See used VEP cache description in the following file:
+
+
+Used CADD annotation files:
+/public_data_resources/CADD/v1.4/GRCh38/whole_genome_SNVs.tsv.gz
+/public_data_resources/CADD/v1.4/GRCh38/InDels.tsv.gz
+
+Working...
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-051.gel.zone>
+Subject: Job 500062: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed May  8 11:46:46 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-051.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed May  8 11:49:03 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP> was used as the working directory.
+Started at Wed May  8 11:49:03 2019
+Terminated at Wed May  8 11:49:42 2019
+Results reported at Wed May  8 11:49:42 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with exit code 130.
+
+Resource usage summary:
+
+    CPU time :                                   0.91 sec.
+    Max Memory :                                 3 MB
+    Average Memory :                             3.00 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   40 MB
+    Max Processes :                              1
+    Max Threads :                                1
+    Run time :                                   39 sec.
+    Turnaround time :                            176 sec.
+
+The output (if any) follows:
+
+Annotate with VEP
+Wed  8 May 11:49:35 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S06_filter_by_qual/filtered_by_qual.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+vep_log: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_annotation.log
+vep_report: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_report.html
+
+--- Data sources ---
+
+See used VEP cache description in the following file:
+
+
+Used CADD annotation files:
+/public_data_resources/CADD/v1.4/GRCh38/whole_genome_SNVs.tsv.gz
+/public_data_resources/CADD/v1.4/GRCh38/InDels.tsv.gz
+
+Working...
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-108.gel.zone>
+Subject: Job 496851: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed May  8 11:22:52 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-108.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed May  8 11:22:56 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP> was used as the working directory.
+Started at Wed May  8 11:22:56 2019
+Terminated at Wed May  8 11:50:02 2019
+Results reported at Wed May  8 11:50:02 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with exit code 130.
+
+Resource usage summary:
+
+    CPU time :                                   1578.00 sec.
+    Max Memory :                                 6587 MB
+    Average Memory :                             6135.92 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   6892 MB
+    Max Processes :                              7
+    Max Threads :                                8
+    Run time :                                   1626 sec.
+    Turnaround time :                            1630 sec.
+
+The output (if any) follows:
+
+Annotate with VEP
+Wed  8 May 11:23:01 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S06_filter_by_qual/filtered_by_qual.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+vep_log: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_annotation.log
+vep_report: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_report.html
+
+--- Data sources ---
+
+See used VEP cache description in the following file:
+
+
+Used CADD annotation files:
+/public_data_resources/CADD/v1.4/GRCh38/whole_genome_SNVs.tsv.gz
+/public_data_resources/CADD/v1.4/GRCh38/InDels.tsv.gz
+
+Working...
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-051.gel.zone>
+Subject: Job 500300: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed May  8 11:47:49 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-051.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed May  8 11:49:42 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP> was used as the working directory.
+Started at Wed May  8 11:49:42 2019
+Terminated at Wed May  8 11:50:08 2019
+Results reported at Wed May  8 11:50:08 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with exit code 130.
+
+Resource usage summary:
+
+    CPU time :                                   21.03 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   26 sec.
+    Turnaround time :                            139 sec.
+
+The output (if any) follows:
+
+Annotate with VEP
+Wed  8 May 11:49:42 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S06_filter_by_qual/filtered_by_qual.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+vep_log: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_annotation.log
+vep_report: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_report.html
+
+--- Data sources ---
+
+See used VEP cache description in the following file:
+
+
+Used CADD annotation files:
+/public_data_resources/CADD/v1.4/GRCh38/whole_genome_SNVs.tsv.gz
+/public_data_resources/CADD/v1.4/GRCh38/InDels.tsv.gz
+
+Working...
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-051.gel.zone>
+Subject: Job 500350: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed May  8 11:48:03 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-051.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed May  8 11:50:08 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP> was used as the working directory.
+Started at Wed May  8 11:50:08 2019
+Terminated at Wed May  8 11:50:11 2019
+Results reported at Wed May  8 11:50:11 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with exit code 130.
+
+Resource usage summary:
+
+    CPU time :                                   1.20 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   3 sec.
+    Turnaround time :                            128 sec.
+
+The output (if any) follows:
+
+Annotate with VEP
+Wed  8 May 11:50:08 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S06_filter_by_qual/filtered_by_qual.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+vep_log: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_annotation.log
+vep_report: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_report.html
+
+--- Data sources ---
+
+See used VEP cache description in the following file:
+
+
+Used CADD annotation files:
+/public_data_resources/CADD/v1.4/GRCh38/whole_genome_SNVs.tsv.gz
+/public_data_resources/CADD/v1.4/GRCh38/InDels.tsv.gz
+
+Working...
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-051.gel.zone>
+Subject: Job 500412: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed May  8 11:48:21 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-051.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed May  8 11:50:12 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP> was used as the working directory.
+Started at Wed May  8 11:50:12 2019
+Terminated at Wed May  8 11:50:16 2019
+Results reported at Wed May  8 11:50:16 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with exit code 130.
+
+Resource usage summary:
+
+    CPU time :                                   2.93 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   4 sec.
+    Turnaround time :                            115 sec.
+
+The output (if any) follows:
+
+Annotate with VEP
+Wed  8 May 11:50:12 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S06_filter_by_qual/filtered_by_qual.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+vep_log: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_annotation.log
+vep_report: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_report.html
+
+--- Data sources ---
+
+See used VEP cache description in the following file:
+
+
+Used CADD annotation files:
+/public_data_resources/CADD/v1.4/GRCh38/whole_genome_SNVs.tsv.gz
+/public_data_resources/CADD/v1.4/GRCh38/InDels.tsv.gz
+
+Working...
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-051.gel.zone>
+Subject: Job 500523: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed May  8 11:48:53 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-051.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed May  8 11:50:16 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP> was used as the working directory.
+Started at Wed May  8 11:50:16 2019
+Terminated at Wed May  8 11:50:23 2019
+Results reported at Wed May  8 11:50:23 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with exit code 130.
+
+Resource usage summary:
+
+    CPU time :                                   3.74 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   7 sec.
+    Turnaround time :                            90 sec.
+
+The output (if any) follows:
+
+Annotate with VEP
+Wed  8 May 11:50:17 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S06_filter_by_qual/filtered_by_qual.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+vep_log: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_annotation.log
+vep_report: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_report.html
+
+--- Data sources ---
+
+See used VEP cache description in the following file:
+
+
+Used CADD annotation files:
+/public_data_resources/CADD/v1.4/GRCh38/whole_genome_SNVs.tsv.gz
+/public_data_resources/CADD/v1.4/GRCh38/InDels.tsv.gz
+
+Working...
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-076.gel.zone>
+Subject: Job 500836: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed May  8 11:50:33 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-076.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed May  8 11:53:52 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP> was used as the working directory.
+Started at Wed May  8 11:53:52 2019
+Terminated at Wed May  8 12:54:45 2019
+Results reported at Wed May  8 12:54:45 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   3568.27 sec.
+    Max Memory :                                 7456 MB
+    Average Memory :                             6692.44 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   7766 MB
+    Max Processes :                              7
+    Max Threads :                                8
+    Run time :                                   3647 sec.
+    Turnaround time :                            3852 sec.
+
+The output (if any) follows:
+
+Annotate with VEP
+Wed  8 May 11:53:52 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S06_filter_by_qual/filtered_by_qual.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/s01_vep.vcf.gz
+vep_log: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_annotation.log
+vep_report: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S07_annotate_with_VEP/results/vep_report.html
+
+--- Data sources ---
+
+See used VEP cache description in the following file:
+
+
+Used CADD annotation files:
+/public_data_resources/CADD/v1.4/GRCh38/whole_genome_SNVs.tsv.gz
+/public_data_resources/CADD/v1.4/GRCh38/InDels.tsv.gz
+
+Working...
+Done
+Wed  8 May 12:54:38 BST 2019
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S07_annotate_with_VEP/s01_annotate_with_vep.err> for stderr output of this job.
+

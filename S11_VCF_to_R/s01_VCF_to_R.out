@@ -1,0 +1,49 @@
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-133.gel.zone>
+Subject: Job 710879: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S11_VCF_to_R/s01_start_R_script.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S11_VCF_to_R/s01_start_R_script.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Mon May 20 14:07:42 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-133.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Mon May 20 14:07:43 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S11_VCF_to_R> was used as the working directory.
+Started at Mon May 20 14:07:43 2019
+Terminated at Mon May 20 19:30:19 2019
+Results reported at Mon May 20 19:30:19 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S11_VCF_to_R/s01_start_R_script.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   19312.92 sec.
+    Max Memory :                                 193615 MB
+    Average Memory :                             63029.73 MB
+    Total Requested Memory :                     200000.00 MB
+    Delta Memory :                               6385.00 MB
+    Max Swap :                                   193874 MB
+    Max Processes :                              4
+    Max Threads :                                5
+    Run time :                                   19362 sec.
+    Turnaround time :                            19357 sec.
+
+The output (if any) follows:
+
+Run an R script in command line
+Mon 20 May 14:07:44 BST 2019
+
+Starting R-script: 
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S11_VCF_to_R/s01_VCF_to_R.R
+
+Done
+Mon 20 May 19:30:19 BST 2019
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S11_VCF_to_R/s01_VCF_to_R.err> for stderr output of this job.
+

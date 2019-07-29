@@ -1,0 +1,395 @@
+---
+title: "Joined PCA plots of GEL and 1kg samples"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+started: Alexey Larionov, 01May2019  
+last updated: Alexey Larionov, 31May2019  
+
+# summary  
+
+- Read eigenvectors and eigenvalues  
+- Read phenotype annotations for 1kg samples (for ethnic populations)  
+- Read phenotype annotations for GEL samples (for case-control status)  
+- Add phenotypes to eigenvectors (for colour coding on plots)  
+- Plot eigenvalues  
+- Plot eighenvectors for all samples and for White: British/Irish only  
+- Make a list of 8,628 samples for White: British/Irish only  
+
+- Compare plots with the published by 1kg consortsium in paper "An integrated map of structural variation in 2,504 human genomes"  
+  (Ext Data Figure 5)  
+
+
+```{r start_section}
+
+Sys.time()
+rm(list=ls())
+graphics.off()
+
+# Libraries installed in system folders
+library(dplyr)
+library(ggplot2)
+library(plotly)
+
+base_folder <- "/home/alarionov/re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis"
+
+options(stringsAsFactors = F,
+        warnPartialMatchArgs = T, 
+        warnPartialMatchAttr = T, 
+        warnPartialMatchDollar = T)
+
+```
+
+# Read PCA data
+
+```{r read_pca_data}
+
+# Compile file names
+pca_data_folder=paste(base_folder,"data/s13_joined_gel_1kg_PCA/s04_calculate_eigenvectors/p03_thinn_and_pca",sep="/") 
+eigenvalues_file=paste(pca_data_folder,"gel_1kg_10kv_100PCs.eigenval",sep="/")
+eigenvectors_file=paste(pca_data_folder,"gel_1kg_10kv_100PCs.eigenvec",sep="/")
+
+# Read data
+eigenval.df <- read.table(eigenvalues_file)
+eigenvec.df <- read.table(eigenvectors_file, header = T)
+
+# Check eigenvalues
+dim(eigenval.df)
+eigenval.df[1:10,]
+
+# Check and update eigenvectors
+dim(eigenvec.df)
+eigenvec.df[1:5,1:5]
+
+eigenvec.df <- eigenvec.df %>% 
+  select(-FID) %>% 
+  rename(sample=IID)
+
+eigenvec.df[1:5,1:5]
+
+rm(pca_data_folder, eigenvalues_file, eigenvectors_file)
+
+```
+
+# Read 1kg phenotypes
+
+```{r read_1kg_phenotypes}
+
+data_file <- "/home/alarionov/public_data_resources/1000-genomes/20130502_GRCh37/integrated_call_samples_v3.20130502.ALL.panel"
+phenotypes_1kg.df <- read.table(data_file,header = T)
+
+dim(phenotypes_1kg.df)
+phenotypes_1kg.df[1:5,]
+
+# Check for duplicates
+sum(duplicated(phenotypes_1kg.df$sample))
+
+# Clean-up
+rm(data_file)
+
+```
+
+# Read gel phenotypes
+
+```{r read_gel_phenotypes}
+
+# Load
+load(paste(base_folder,"data/s12_explore_and_filter/s06_explore_and_update_phenotypes.RData",sep="/"))
+
+# Check
+dim(phenotypes.df)
+sum(duplicated(phenotypes.df$Platekey))
+
+# Rname
+phenotypes_gel.df <- phenotypes.df
+
+# Clean-up
+rm(phenotypes.df)
+
+```
+
+# Combime phenotypes
+
+Note increased figure heght to fit the vertical fprmat of figure   
+
+```{r combine_phenotypes, fig.height=7}
+
+# Compile joined data fgrame with phenotypes
+
+phenotypes_1kg.df <- phenotypes_1kg.df %>% select(sample, group=super_pop)
+phenotypes_1kg.df <- cbind(phenotypes_1kg.df, gel_ethnicity="1kg")
+
+phenotypes_gel.df <- phenotypes_gel.df %>% select(sample=Platekey, group=Group, gel_ethnicity=Participant.Ethnic.Category)
+
+phenotypes.df <- rbind(phenotypes_1kg.df, phenotypes_gel.df)
+
+head(phenotypes.df)
+tail(phenotypes.df)
+
+# Explore group column
+table(phenotypes.df$group)
+
+# Make table of ethnicity in the joined dataset
+sort(table(phenotypes.df$gel_ethnicity), decreasing = T)
+
+# --- Make plot of ethnic groups in the GEL subset of data --- #
+
+# Adjust default margins (to make space at the left of the plot for outside legend)
+init_mar <- par("mar") # save initial grafics parameters
+par(mar=c(20,4,4,4)) # modify margins
+
+# Plot
+barplot(sort(table(phenotypes.df[phenotypes.df$gel_ethnicity!="1kg","gel_ethnicity"]), 
+             decreasing = T),
+        las=2, main="Reported  ethnicity in selected GEL samples")
+
+# Restore initial graphics parameters
+par(mar=init_mar)
+
+# Clean-up
+rm(phenotypes_1kg.df, phenotypes_gel.df, init_mar)
+
+```
+
+# Add phenotypes to eigenvectors
+
+```{r add_phenotypes_to_eigenvectors}
+
+eigenphen.df <- inner_join(phenotypes.df, eigenvec.df, by="sample")
+dim(eigenphen.df)
+
+head(eigenphen.df[,1:5])
+tail(eigenphen.df[,1:5])
+
+rm(phenotypes.df, eigenvec.df)
+
+```
+
+# Plot eigenvalues
+
+```{r plot_eigenvalues}
+
+plot(eigenval.df$V1, 
+     main="GEL + 1kg PCA: Variance captured by top 100 eigenvectors",
+     ylab="Variance", xlab="Eigenvector", type="b")
+
+rm(eigenval.df)
+
+```
+
+# Plot PC1 vs PC2
+
+### A simple plot
+
+```{r simple_plot}
+
+# Explore groups
+table(eigenphen.df$group)
+
+# Prepare vector of colours
+myColours <- eigenphen.df$group
+"blue" -> myColours[myColours=="EUR"]
+"brown" -> myColours[myColours=="AFR"]
+"green" -> myColours[myColours=="AMR"]
+"grey" -> myColours[myColours=="SAS"]
+"magenta" -> myColours[myColours=="EAS"]
+"red" -> myColours[myColours=="cases"]
+"pink" -> myColours[myColours=="controls"]
+
+# Prepare vector of point types (4 is for cross, 19 is for circle)
+myPch <- eigenphen.df$group
+4 -> myPch[myPch=="EUR"]
+4 -> myPch[myPch=="AFR"]
+4 -> myPch[myPch=="AMR"]
+4 -> myPch[myPch=="SAS"]
+4 -> myPch[myPch=="EAS"]
+19 -> myPch[myPch=="cases"]
+19 -> myPch[myPch=="controls"]
+myPch <- as.integer(myPch)
+
+# Adjust default margins (to make space at the left of the plot for outside legend)
+init_mar <- par("mar") # save initial grafics parameters
+init_xpd <- par("xpd") # save initial grafics parameters
+par(mar=c(4,4,4,8), xpd=T) # modify margins
+
+# Make the plot
+plot(PC2~PC1, data=eigenphen.df, 
+     col=myColours, pch=myPch, 
+     main="GEL and 1kg PCA plot")
+
+# Add legend
+legend("topright",inset=c(-0.3,0),
+       legend=c("EUR","AFR","AMR","SAS","EAS","GEL cases","GEL controls"),
+       pch=c(4,4,4,4,4,19,19),
+       col=c("blue","brown","green","grey","magenta","red","pink"),
+       bty="n")
+
+# Restore initial graphics parameters
+par(mar=init_mar, xpd=init_xpd)
+
+# Clean-up
+rm(myColours, myPch, init_mar, init_xpd)
+
+```
+
+### ggplot
+
+```{r ggplot}
+
+# Prepare named vector for colour scale 
+myColours <- c("EUR" = "BLUE", "AFR" = "BROWN", "AMR" = "GREEN", 
+               "SAS" = "GREY", "EAS" = "MAGENTA", 
+               "cases" = "RED", "controls" = "PINK")
+myColours
+
+# Convert the colour vector to format required by ggplot
+myColourScale <- scale_colour_manual(values=myColours) 
+
+# Make plot
+# note that dots are plotted in order of the data, and legend is in alphabetic order
+ggplot(eigenphen.df, aes(PC1, PC2)) +
+  geom_point(aes(col=group)) + 
+  labs(title="GEL and 1kg PCA plot", x = "PC1", y ="PC2") +
+  myColourScale
+
+# Clean-up (keep myColourScale for later use)
+rm(myColours)
+
+```
+
+### ggplotly
+
+```{r ggplotly}
+
+# Prepare vector with cases IDs
+cases_ids <- eigenphen.df[,"sample"]
+
+# Prepare factor with cases labels (it has to be a factor, not vector)
+cases_labels <- as.factor(eigenphen.df$group)
+
+# Explicitly reset order of levels in factor: this will define the order of legend and plotting (last elements are plotted on top)
+cases_labels <- factor(cases_labels, levels=c("AMR", "SAS", "EAS", "EUR", "AFR", "cases", "controls"))
+
+# Make plot (save instead of immediate rendering)
+g <- ggplot(eigenphen.df, aes(PC1, PC2)) +
+  geom_point(aes(col=cases_labels, text=cases_ids)) + 
+  labs(title="GEL and 1kg PCA plot", x = "PC1", y ="PC2") +
+  myColourScale
+
+# Render plor with ggplotly
+ggplotly(g)
+
+# Clean-up
+rm(g, myColourScale, cases_ids, cases_labels)
+
+```
+
+# ggplot PCA plot including the White British GEL participants only
+
+```{r}
+
+selected_samples <- eigenphen.df$gel_ethnicity == "1kg" | 
+                    eigenphen.df$gel_ethnicity == "White: British" | 
+                    eigenphen.df$gel_ethnicity == "White: Irish"
+sum(selected_samples)
+
+eigenphen.df <- eigenphen.df[selected_samples,]
+dim(eigenphen.df)
+
+# Prepare named vector for colour scale 
+myColours <- c("EUR" = "BLUE", "AFR" = "BROWN", "AMR" = "GREEN", 
+               "SAS" = "GREY", "EAS" = "MAGENTA", 
+               "cases" = "RED", "controls" = "PINK")
+myColours
+
+# Convert the colour vector to format required by ggplot
+myColourScale <- scale_colour_manual(values=myColours) 
+
+# Make plot
+# note that dots are plotted in order of the data, and legend is in alphabetic order
+ggplot(eigenphen.df, aes(PC1, PC2)) +
+  geom_point(aes(col=group)) + 
+  labs(title="GEL and 1kg PCA plot", x = "PC1", y ="PC2") +
+  myColourScale
+
+# Clean-up (keep myColourScale for later use)
+rm(myColours, myColourScale, selected_samples)
+
+```
+
+# plotly PCA plot including the White British GEL participants only
+
+```{r}
+
+# Prepare named vector for colour scale 
+myColours <- c("EUR" = "BLUE", "AFR" = "BROWN", "AMR" = "GREEN", 
+               "SAS" = "GREY", "EAS" = "MAGENTA", 
+               "cases" = "RED", "controls" = "PINK")
+
+# Convert the colour vector to format required by ggplot
+myColourScale <- scale_colour_manual(values=myColours) 
+
+# Prepare vector with cases IDs
+cases_ids <- eigenphen.df[,"sample"]
+
+# Prepare factor with cases labels (it has to be a factor, not vector)
+cases_labels <- as.factor(eigenphen.df$group)
+
+# Explicitly reset order of levels in factor: this will define the order of legend and plotting (last elements are plotted on top)
+cases_labels <- factor(cases_labels, levels=c("AMR", "SAS", "EAS", "EUR", "AFR", "cases", "controls"))
+
+# Make plot (save instead of immediate rendering)
+g <- ggplot(eigenphen.df, aes(PC1, PC2)) +
+  geom_point(aes(col=cases_labels, text=cases_ids)) + 
+  labs(title="GEL and 1kg PCA plot", x = "PC1", y ="PC2") +
+  myColourScale
+
+# Render plor with ggplotly
+ggplotly(g)
+
+# Clean-up
+rm(g, myColourScale, myColours, cases_ids, cases_labels)
+
+```
+
+# Make list of 8,628 samples for downstream analysis
+
+```{r}
+
+# Cjeck ethnic groups still retained in the current data
+table(eigenphen.df$gel_ethnicity)
+
+# Select cases (note drop=F: this is to keep output as a DF, rather than a vector)
+selected_samples <- eigenphen.df[eigenphen.df$gel_ethnicity != "1kg", "sample", drop=F]
+dim(selected_samples)
+
+# Write cases into the text file
+write.table(selected_samples, 
+            file=paste(base_folder,"data/s13_joined_gel_1kg_PCA/s05_make_PCA_plots/reported_white_british_irish.txt",sep="/"),
+            col.names=F, row.names=F, quote=F)
+
+# Clean-up
+rm(selected_samples)
+
+```
+
+# save data
+
+```{r}
+
+save(eigenphen.df, 
+     file=paste(base_folder,"data/s13_joined_gel_1kg_PCA/s05_make_PCA_plots/s01_plot_gel_1kg_PCA.RData",sep="/"))
+
+```
+
+# final section
+
+```{r final_section}
+
+ls()
+sessionInfo()
+Sys.time()
+
+```

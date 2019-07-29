@@ -1,0 +1,225 @@
+---
+title: "Plot selected samples in joined gel 1kg PCA"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+started: Alexey Larionov, 29May2019  
+last updated: Carmelina Charalambous 04June2019  
+
+# summary  
+
+- Read joined gel 1kg eigenvectors  
+- Read ev outliers for 3sd: 3pc, 5pc and 10 pc  
+- Plot PC1 vs PC2 w/o the outliers  
+- 3sd 5pc has been selected as the threshold to remove ethnic outliers  
+
+6sd was nit ploteed because it is clear from the counts of outliers that 6sd would be too relaxed  
+
+```{r start_section}
+
+Sys.time()
+rm(list=ls())
+graphics.off()
+
+# Libraries installed in system folders
+library(dplyr)
+library(ggplot2)
+library(plotly)
+
+base_folder <- "/home/ccharalambous/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution"
+
+options(stringsAsFactors = F,
+        warnPartialMatchArgs = T, 
+        warnPartialMatchAttr = T, 
+        warnPartialMatchDollar = T)
+
+```
+
+# Read joined PCA data
+
+```{r read_pca_data}
+
+load(paste(base_folder,"data/S13_add_eigenvectors/s05_make_PCA_plots/s01_plot_gel_1kg_PCA.RData",sep="/"))
+dim(eigenphen.df)
+
+```
+
+# Read gel ev outliers
+
+```{r read_phenotypes}
+
+# Compile file name
+data_folder <- paste(base_folder,"data/S14_gel_only_PCA/s03_make_PCA_plots",sep="/") 
+
+# Read outliers
+ev_outliers_3sd_3pc.df <- read.table(paste(data_folder, "ev_outliers_3sd_3pc.txt", sep="/")
+                                     , sep="\t", header=F, quote="")
+
+ev_outliers_3sd_5pc.df <- read.table(paste(data_folder, "ev_outliers_3sd_5pc.txt", sep="/")
+                                     , sep="\t", header=F, quote="")
+
+ev_outliers_3sd_10pc.df <- read.table(paste(data_folder, "ev_outliers_3sd_10pc.txt", sep="/")
+                                     , sep="\t", header=F, quote="")
+
+dim(ev_outliers_3sd_3pc.df)
+dim(ev_outliers_3sd_5pc.df)
+dim(ev_outliers_3sd_10pc.df)
+
+# Clean-up
+rm(data_folder)
+
+```
+
+# Exclude outliers
+
+```{r}
+
+# Eexclude
+eigenphen_3sd_3pc.df <- eigenphen.df[!eigenphen.df$sample %in% ev_outliers_3sd_3pc.df$V1,]
+eigenphen_3sd_5pc.df <- eigenphen.df[!eigenphen.df$sample %in% ev_outliers_3sd_5pc.df$V1,]
+eigenphen_3sd_10pc.df <- eigenphen.df[!eigenphen.df$sample %in% ev_outliers_3sd_10pc.df$V1,]
+
+# Check result
+table(eigenphen_3sd_3pc.df$gel_ethnicity)
+table(eigenphen_3sd_5pc.df$gel_ethnicity)
+table(eigenphen_3sd_10pc.df$gel_ethnicity)
+
+# Clean-up
+rm(ev_outliers_3sd_3pc.df, ev_outliers_3sd_5pc.df, ev_outliers_3sd_10pc.df, eigenphen.df)
+
+```
+
+# Plot PC1 vs PC2 for 3sd 3pc
+
+```{r}
+
+# Prepare named vector for colour scale 
+myColours <- c("EUR" = "BLUE", "AFR" = "BROWN", "AMR" = "GREEN", 
+               "SAS" = "GREY", "EAS" = "MAGENTA", 
+               "cases" = "RED", "controls" = "PINK")
+
+# Convert the colour vector to format required by ggplot
+myColourScale <- scale_colour_manual(values=myColours) 
+
+# Prepare vector with cases IDs
+cases_ids <- eigenphen_3sd_3pc.df[,"sample"]
+
+# Prepare factor with cases labels (it has to be a factor, not vector)
+cases_labels <- as.factor(eigenphen_3sd_3pc.df$group)
+
+# Explicitly reset order of levels in factor: this will define the order of legend and plotting (last elements are plotted on top)
+cases_labels <- factor(cases_labels, levels=c("AMR", "SAS", "EAS", "EUR", "AFR", "cases", "controls"))
+
+# Make plot (save instead of immediate rendering)
+g <- ggplot(eigenphen_3sd_3pc.df, aes(PC1, PC2)) +
+  geom_point(aes(col=cases_labels, text=cases_ids)) + 
+  labs(title="GEL and 1kg PCA plot: w/o 3sd on 3pc", x = "PC1", y ="PC2") +
+  myColourScale
+
+# Plot
+g
+
+# Render plot with ggplotly
+ggplotly(g)
+
+# Clean-up
+rm(g, myColourScale, myColours, cases_ids, cases_labels)
+
+```
+
+# Plot PC1 vs PC2 for 3sd 5pc
+
+```{r}
+
+# Prepare named vector for colour scale 
+myColours <- c("EUR" = "BLUE", "AFR" = "BROWN", "AMR" = "GREEN", 
+               "SAS" = "GREY", "EAS" = "MAGENTA", 
+               "cases" = "RED", "controls" = "PINK")
+
+# Convert the colour vector to format required by ggplot
+myColourScale <- scale_colour_manual(values=myColours) 
+
+# Prepare vector with cases IDs
+cases_ids <- eigenphen_3sd_5pc.df[,"sample"]
+
+# Prepare factor with cases labels (it has to be a factor, not vector)
+cases_labels <- as.factor(eigenphen_3sd_5pc.df$group)
+
+# Explicitly reset order of levels in factor: this will define the order of legend and plotting (last elements are plotted on top)
+cases_labels <- factor(cases_labels, levels=c("AMR", "SAS", "EAS", "EUR", "AFR", "cases", "controls"))
+
+# Make plot (save instead of immediate rendering)
+g <- ggplot(eigenphen_3sd_5pc.df, aes(PC1, PC2)) +
+  geom_point(aes(col=cases_labels, text=cases_ids)) + 
+  labs(title="GEL and 1kg PCA plot: w/o 3sd on 5pc", x = "PC1", y ="PC2") +
+  myColourScale
+
+# Plot
+g
+
+# Render plot with ggplotly
+ggplotly(g)
+
+# Clean-up
+rm(g, myColourScale, myColours, cases_ids, cases_labels)
+
+```
+
+# Plot PC1 vs PC2 for 3sd 10pc
+
+```{r}
+
+# Prepare named vector for colour scale 
+myColours <- c("EUR" = "BLUE", "AFR" = "BROWN", "AMR" = "GREEN", 
+               "SAS" = "GREY", "EAS" = "MAGENTA", 
+               "cases" = "RED", "controls" = "PINK")
+
+# Convert the colour vector to format required by ggplot
+myColourScale <- scale_colour_manual(values=myColours) 
+
+# Prepare vector with cases IDs
+cases_ids <- eigenphen_3sd_10pc.df[,"sample"]
+
+# Prepare factor with cases labels (it has to be a factor, not vector)
+cases_labels <- as.factor(eigenphen_3sd_10pc.df$group)
+
+# Explicitly reset order of levels in factor: this will define the order of legend and plotting (last elements are plotted on top)
+cases_labels <- factor(cases_labels, levels=c("AMR", "SAS", "EAS", "EUR", "AFR", "cases", "controls"))
+
+# Make plot (save instead of immediate rendering)
+g <- ggplot(eigenphen_3sd_10pc.df, aes(PC1, PC2)) +
+  geom_point(aes(col=cases_labels, text=cases_ids)) + 
+  labs(title="GEL and 1kg PCA plot: w/o 3sd on 10pc", x = "PC1", y ="PC2") +
+  myColourScale
+
+# Plot
+g
+
+# Render plot with ggplotly
+ggplotly(g)
+
+# Clean-up
+rm(g, myColourScale, myColours, cases_ids, cases_labels)
+
+```
+
+# save data
+
+```{r}
+
+save(eigenphen_3sd_3pc.df,eigenphen_3sd_5pc.df, 
+     file=paste(base_folder,"data/S14_gel_only_PCA/s03_make_PCA_plots/s02_plot_selected_samples_in_joined_gel_1kg_PCA.RData",sep="/"))
+
+```
+
+# final section
+
+```{r final_section}
+
+ls()
+sessionInfo()
+Sys.time()
+
+```

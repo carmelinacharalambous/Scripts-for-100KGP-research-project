@@ -1,0 +1,571 @@
+---
+title: "PCA plots of GEL only samples"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+started: Alexey Larionov, 01May2019  
+last updated: Carmelina Charalambous 04June2019  
+
+# summary  
+
+- Read eigenvectors and eigenvalues  
+- Read phenotype annotations (for case-control status)  
+- Add phenotypes to eigenvectors (for colour coding on plots)  
+- Plot eigenvalues  
+- Plot eighenvectors  
+- Select outliers, print to the text file for later use  
+
+```{r start_section}
+
+Sys.time()
+rm(list=ls())
+graphics.off()
+
+# Libraries installed in system folders
+library(dplyr)
+library(ggplot2)
+library(plotly)
+
+base_folder <- "/home/ccharalambous/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution"
+
+options(stringsAsFactors = F,
+        warnPartialMatchArgs = T, 
+        warnPartialMatchAttr = T, 
+        warnPartialMatchDollar = T)
+
+```
+
+# Read PCA data
+
+```{r read_pca_data}
+
+# Compile file names
+pca_data_folder=paste(base_folder,"data/S14_gel_only_PCA/s02_calculate_eigenvectors/p03_thinn_and_pca",sep="/") 
+eigenvalues_file=paste(pca_data_folder,"gel_only_10kv_100PCs.eigenval",sep="/")
+eigenvectors_file=paste(pca_data_folder,"gel_only_10kv_100PCs.eigenvec",sep="/")
+
+# Read data
+eigenval.df <- read.table(eigenvalues_file)
+eigenvec.df <- read.table(eigenvectors_file, header = T)
+
+# Check eigenvalues
+dim(eigenval.df)
+eigenval.df[1:10,]
+
+# Check and update eigenvectors
+dim(eigenvec.df)
+eigenvec.df[1:5,1:5]
+
+eigenvec.df <- eigenvec.df %>% 
+  select(-FID) %>% 
+  rename(sample=IID)
+
+eigenvec.df[1:5,1:5]
+
+rm(pca_data_folder, eigenvalues_file, eigenvectors_file)
+
+```
+
+# Read phenotypes
+
+```{r read_phenotypes}
+
+# Load
+load(paste(base_folder,"data/S12_explore_and_filter/s06_explore_and_update_phenotypes.RData",sep="/"))
+
+# Check
+dim(phenotypes.df)
+sum(duplicated(phenotypes.df$Platekey))
+
+```
+
+# Explore ethnicities
+
+```{r explore_ethnicities, fig.height=7}
+
+# Explore group column
+table(phenotypes.df$Group)
+
+# Make table of ethnicity in the joined dataset
+sort(table(phenotypes.df$Participant.Ethnic.Category), decreasing = T)
+
+# --- Make plot of ethnic groups in the GEL subset of data --- #
+
+# Adjust default margins (to make space at the left of the plot for outside legend)
+init_mar <- par("mar") # save initial grafics parameters
+par(mar=c(20,4,4,4)) # modify margins
+
+# Plot
+barplot(sort(table(phenotypes.df$Participant.Ethnic.Category), 
+             decreasing = T),
+        las=2, main="Reported  ethnicity in selected GEL samples")
+
+# Restore initial graphics parameters
+par(mar=init_mar)
+
+# Clean-up
+rm(init_mar)
+
+```
+
+# Add phenotypes to eigenvectors
+
+```{r add_phenotypes_to_eigenvectors}
+
+phenotypes.df <- phenotypes.df %>% rename(sample=Platekey)
+
+eigenphen.df <- inner_join(phenotypes.df, eigenvec.df, by="sample")
+dim(eigenphen.df)
+
+head(eigenphen.df[,1:5])
+tail(eigenphen.df[,1:5])
+
+rm(phenotypes.df, eigenvec.df)
+
+```
+
+# Plot eigenvalues
+
+```{r plot_eigenvalues}
+
+plot(eigenval.df$V1, 
+     main="GEL only PCA: Variance captured by top 100 eigenvectors",
+     ylab="Variance", xlab="Eigenvector", type="b")
+
+rm(eigenval.df)
+
+```
+
+# Plot PC1 to PC5
+
+### A simple plot
+
+```{r simple_plot}
+
+# Explore groups
+table(eigenphen.df$Group)
+
+# Prepare vector of colours
+myColours <- eigenphen.df$Group
+"red" -> myColours[myColours=="cases"]
+"blue" -> myColours[myColours=="controls"]
+
+# Adjust default margins (to make space at the left of the plot for outside legend)
+init_mar <- par("mar") # save initial grafics parameters
+init_xpd <- par("xpd") # save initial grafics parameters
+par(mar=c(4,4,4,8), xpd=T) # modify margins
+
+# --- Make PC2 vs PC1 plot --- #
+
+plot(PC2~PC1, data=eigenphen.df, 
+     col=myColours, pch=4, 
+     main="GEL only PCA plot")
+
+# Add threshold lines at 3 x sd
+lo_th_pc1 <- mean(eigenphen.df$PC1) - 3 * sd(eigenphen.df$PC1)
+hi_th_pc1 <- mean(eigenphen.df$PC1) + 3 * sd(eigenphen.df$PC1)
+
+lo_th_pc2 <- mean(eigenphen.df$PC2) - 3 * sd(eigenphen.df$PC2)
+hi_th_pc2 <- mean(eigenphen.df$PC2) + 3 * sd(eigenphen.df$PC2)
+
+abline(v=lo_th_pc1, lty=2, xpd=F)
+abline(v=hi_th_pc1, lty=2, xpd=F)
+abline(h=lo_th_pc2, lty=2, xpd=F)
+abline(h=hi_th_pc2, lty=2, xpd=F)
+
+# Add legend
+legend("topright",inset=c(-0.2,0),
+       legend=c("cases","controls"),
+       pch=4,
+       col=c("red","blue"),
+       bty="n")
+
+# --- Make PC3 vs PC2 plot --- #
+
+plot(PC3~PC2, data=eigenphen.df, 
+     col=myColours, pch=4, 
+     main="GEL only PCA plot")
+
+# Add threshold lines at 3 x sd
+lo_th_pc3 <- mean(eigenphen.df$PC3) - 3 * sd(eigenphen.df$PC3)
+hi_th_pc3 <- mean(eigenphen.df$PC3) + 3 * sd(eigenphen.df$PC3)
+
+abline(v=lo_th_pc2, lty=2, xpd=F)
+abline(v=hi_th_pc2, lty=2, xpd=F)
+abline(h=lo_th_pc3, lty=2, xpd=F)
+abline(h=hi_th_pc3, lty=2, xpd=F)
+
+# Add legend
+legend("topright",inset=c(-0.2,0),
+       legend=c("cases","controls"),
+       pch=4,
+       col=c("red","blue"),
+       bty="n")
+
+# --- Make PC4 vs PC3 plot --- #
+
+plot(PC4~PC3, data=eigenphen.df, 
+     col=myColours, pch=4, 
+     main="GEL only PCA plot")
+
+# Add threshold lines at 3 x sd
+lo_th_pc4 <- mean(eigenphen.df$PC4) - 3 * sd(eigenphen.df$PC4)
+hi_th_pc4 <- mean(eigenphen.df$PC4) + 3 * sd(eigenphen.df$PC4)
+
+abline(v=lo_th_pc3, lty=2, xpd=F)
+abline(v=hi_th_pc3, lty=2, xpd=F)
+abline(h=lo_th_pc4, lty=2, xpd=F)
+abline(h=hi_th_pc4, lty=2, xpd=F)
+
+# Add legend
+legend("topright",inset=c(-0.2,0),
+       legend=c("cases","controls"),
+       pch=4,
+       col=c("red","blue"),
+       bty="n")
+
+# --- Make PC5 vs PC4 plot --- #
+
+plot(PC5~PC4, data=eigenphen.df, 
+     col=myColours, pch=4, 
+     main="GEL only PCA plot")
+
+# Add threshold lines at 3 x sd
+lo_th_pc5 <- mean(eigenphen.df$PC5) - 3 * sd(eigenphen.df$PC5)
+hi_th_pc5 <- mean(eigenphen.df$PC5) + 3 * sd(eigenphen.df$PC5)
+
+abline(v=lo_th_pc4, lty=2, xpd=F)
+abline(v=hi_th_pc4, lty=2, xpd=F)
+abline(h=lo_th_pc5, lty=2, xpd=F)
+abline(h=hi_th_pc5, lty=2, xpd=F)
+
+# Add legend
+legend("topright",inset=c(-0.2,0),
+       legend=c("cases","controls"),
+       pch=4,
+       col=c("red","blue"),
+       bty="n")
+
+# Restore initial graphics parameters
+par(mar=init_mar,xpd=init_xpd)
+
+# Clean-up
+rm(myColours, init_mar, init_xpd,
+   lo_th_pc1, lo_th_pc2, lo_th_pc3, lo_th_pc4, lo_th_pc5, 
+   hi_th_pc1, hi_th_pc2, hi_th_pc3, hi_th_pc4, hi_th_pc5)
+
+```
+
+### ggplot
+
+```{r ggplot}
+
+# Prepare named vector for colour scale 
+myColours <- c("cases" = "red", "controls" = "blue")
+myColours
+
+# Convert the colour vector to format required by ggplot
+myColourScale <- scale_colour_manual(values=myColours) 
+
+# Make plot
+# note that dots are plotted in order of the data, and legend is in alphabetic order
+ggplot(eigenphen.df, aes(PC1, PC2)) +
+  geom_point(aes(col=Group)) + 
+  labs(title="GEL only PCA plot", x = "PC1", y ="PC2") +
+  myColourScale
+
+# Clean-up
+rm(myColours, myColourScale)
+
+```
+
+### ggplotly
+
+```{r ggplotly}
+
+# Prepare colour scale 
+myColours <- c("cases" = "red", "controls" = "blue")
+myColourScale <- scale_colour_manual(values=myColours) 
+
+# Prepare vector with cases IDs
+cases_ids <- eigenphen.df[,"sample"]
+
+# Prepare factor with cases labels (it has to be a factor, not vector)
+cases_labels <- as.factor(eigenphen.df$Group)
+
+# Make plot (save instead of immediate rendering)
+g <- ggplot(eigenphen.df, aes(PC1, PC2)) +
+  geom_point(aes(col=cases_labels, text=cases_ids)) + 
+  labs(title="GEL only PCA plot", x = "PC1", y ="PC2") +
+  myColourScale
+
+# Render plor with ggplotly
+ggplotly(g)
+
+# Make plot (save instead of immediate rendering)
+g <- ggplot(eigenphen.df, aes(PC2, PC3)) +
+  geom_point(aes(col=cases_labels, text=cases_ids)) + 
+  labs(title="GEL only PCA plot", x = "PC2", y ="PC3") +
+  myColourScale
+
+# Render plor with ggplotly
+ggplotly(g)
+
+# Make plot (save instead of immediate rendering)
+g <- ggplot(eigenphen.df, aes(PC3, PC4)) +
+  geom_point(aes(col=cases_labels, text=cases_ids)) + 
+  labs(title="GEL only PCA plot", x = "PC3", y ="PC4") +
+  myColourScale
+
+# Render plor with ggplotly
+ggplotly(g)
+
+# Make plot (save instead of immediate rendering)
+g <- ggplot(eigenphen.df, aes(PC4, PC5)) +
+  geom_point(aes(col=cases_labels, text=cases_ids)) + 
+  labs(title="GEL only PCA plot", x = "PC4", y ="PC5") +
+  myColourScale
+
+# Render plor with ggplotly
+ggplotly(g)
+
+# Clean-up
+rm(g, myColourScale, myColours, cases_ids, cases_labels)
+
+```
+
+# Function to get outliers on top 10 PCs
+
+Takes one parameter: the SD threshold  
+Assumes eigenphen.df in the environment  
+Adds to the environment the set of logical vectors for outliers:  
+lo_pc1, hi_pc1 ... lo_pc10, hi_pc10  
+
+Note using <<- for making variables visible outside of the function  
+
+```{r}
+
+get_outliers.udf <- function(sd_threshold){
+  
+    # Start message
+    cat("Selecting outliers in top 10 PCs at threshold",sd_threshold,"\n")
+    
+    # PC1 outliers
+    pc1 <- eigenphen.df$PC1
+    pc1_mean <- mean(pc1)
+    pc1_sd  <- sd(pc1)
+    lo_pc1 <<- pc1 < pc1_mean - sd_threshold * pc1_sd
+    hi_pc1 <<- pc1 > pc1_mean + sd_threshold * pc1_sd
+    cat("pc1 lo/hi:",sum(lo_pc1),"/",sum(hi_pc1),"\n")
+    
+    # PC2 outliers
+    pc2 <- eigenphen.df$PC2
+    pc2_mean <- mean(pc2)
+    pc2_sd  <- sd(pc2)
+    lo_pc2 <<- pc2 < pc2_mean - sd_threshold * pc2_sd
+    hi_pc2 <<- pc2 > pc2_mean + sd_threshold * pc2_sd
+    cat("pc2 lo/hi:",sum(lo_pc2),"/",sum(hi_pc2),"\n")
+    
+    # PC3 outliers
+    pc3 <- eigenphen.df$PC3
+    pc3_mean <- mean(pc3)
+    pc3_sd  <- sd(pc3)
+    lo_pc3 <<- pc3 < pc3_mean - sd_threshold * pc3_sd
+    hi_pc3 <<- pc3 > pc3_mean + sd_threshold * pc3_sd
+    cat("pc3 lo/hi:",sum(lo_pc3),"/",sum(hi_pc3),"\n")
+    
+    # PC4 outliers
+    pc4 <- eigenphen.df$PC4
+    pc4_mean <- mean(pc4)
+    pc4_sd  <- sd(pc4)
+    lo_pc4 <<- pc4 < pc4_mean - sd_threshold * pc4_sd
+    hi_pc4 <<- pc4 > pc4_mean + sd_threshold * pc4_sd
+    cat("pc4 lo/hi:",sum(lo_pc4),"/",sum(hi_pc4),"\n")
+    
+    # PC5 outliers
+    pc5 <- eigenphen.df$PC5
+    pc5_mean <- mean(pc5)
+    pc5_sd  <- sd(pc5)
+    lo_pc5 <<- pc5 < pc5_mean - 3 * pc5_sd
+    hi_pc5 <<- pc5 > pc5_mean + 3 * pc5_sd
+    cat("pc5 lo/hi:",sum(lo_pc5),"/",sum(hi_pc5),"\n")
+    
+    # PC6 outliers
+    pc6 <- eigenphen.df$PC6
+    pc6_mean <- mean(pc6)
+    pc6_sd  <- sd(pc6)
+    lo_pc6 <<- pc6 < pc6_mean - 6 * pc6_sd
+    hi_pc6 <<- pc6 > pc6_mean + 6 * pc6_sd
+    cat("pc6 lo/hi:",sum(lo_pc6),"/",sum(hi_pc6),"\n")
+    
+    # PC7 outliers
+    pc7 <- eigenphen.df$PC7
+    pc7_mean <- mean(pc7)
+    pc7_sd  <- sd(pc7)
+    lo_pc7 <<- pc7 < pc7_mean - 6 * pc7_sd
+    hi_pc7 <<- pc7 > pc7_mean + 6 * pc7_sd
+    cat("pc7 lo/hi:",sum(lo_pc7),"/",sum(hi_pc7),"\n")
+    
+    # PC8 outliers
+    pc8 <- eigenphen.df$PC8
+    pc8_mean <- mean(pc8)
+    pc8_sd  <- sd(pc8)
+    lo_pc8 <<- pc8 < pc8_mean - 6 * pc8_sd
+    hi_pc8 <<- pc8 > pc8_mean + 6 * pc8_sd
+    cat("pc8 lo/hi:",sum(lo_pc8),"/",sum(hi_pc8),"\n")
+    
+    # PC9 outliers
+    pc9 <- eigenphen.df$PC9
+    pc9_mean <- mean(pc9)
+    pc9_sd  <- sd(pc9)
+    lo_pc9 <<- pc9 < pc9_mean - 6 * pc9_sd
+    hi_pc9 <<- pc9 > pc9_mean + 6 * pc9_sd
+    cat("pc9 lo/hi:",sum(lo_pc9),"/",sum(hi_pc9),"\n")
+    
+    # PC10 outliers
+    pc10 <- eigenphen.df$PC10
+    pc10_mean <- mean(pc10)
+    pc10_sd  <- sd(pc10)
+    lo_pc10 <<- pc10 < pc10_mean - 6 * pc10_sd
+    hi_pc10 <<- pc10 > pc10_mean + 6 * pc10_sd
+    cat("pc10 lo/hi:",sum(lo_pc10),"/",sum(hi_pc10),"\n\n")
+    
+}
+
+```
+
+# Select eigenvectors outliers at 6 x sd
+
+```{r}
+
+# Get outliers at 6 x sd
+get_outliers.udf(6)
+
+# Combine outliers
+
+ev_outliers_6sd_3pc <- lo_pc1 | lo_pc2 | lo_pc3 | 
+                       hi_pc1 | hi_pc2 | hi_pc3
+
+ev_outliers_6sd_5pc <- lo_pc1 | lo_pc2 | lo_pc3 | lo_pc4 | lo_pc5 | 
+                       hi_pc1 | hi_pc2 | hi_pc3 | hi_pc4 | hi_pc5
+
+ev_outliers_6sd_10pc <- lo_pc1 | lo_pc2 | lo_pc3 | lo_pc4 | lo_pc5 | lo_pc6 | lo_pc7 | lo_pc8 | lo_pc9 | lo_pc10 | 
+                        hi_pc1 | hi_pc2 | hi_pc3 | hi_pc4 | hi_pc5 | hi_pc6 | hi_pc7 | hi_pc8 | hi_pc9 | hi_pc10
+
+sum(ev_outliers_6sd_3pc) # 31 outliers @ 6 x sd on 3 top PCs
+sum(ev_outliers_6sd_5pc) # 109 outliers @ 6 x sd on 5 top PCs
+sum(ev_outliers_6sd_10pc) # 122 outliers @ 6 x sd on 10 top PCs
+
+# Check the count and ethnicity of retained samples (w/o outliers @ 6 x sd on 5 top PCs)
+sum(! ev_outliers_6sd_10pc) # 8,506 ethnically similar samples retained 
+table(eigenphen.df[,"Participant.Ethnic.Category"]) # 8,498 British and 130 Irish
+table(eigenphen.df[! ev_outliers_6sd_10pc,"Participant.Ethnic.Category"]) # 8,379 British and 127 Irish
+
+# Get the samples names
+ev_outliers_6sd_3pc.df <- eigenphen.df[ev_outliers_6sd_3pc, "sample", drop=F]
+ev_outliers_6sd_5pc.df <- eigenphen.df[ev_outliers_6sd_5pc, "sample", drop=F]
+ev_outliers_6sd_10pc.df <- eigenphen.df[ev_outliers_6sd_10pc, "sample", drop=F]
+
+# Write selected samples into the text file
+write.table(ev_outliers_6sd_3pc.df, 
+            file=paste(base_folder,"data/S14_gel_only_PCA/s03_make_PCA_plots/ev_outliers_6sd_3pc.txt",sep="/"),
+            col.names=F, row.names=F, quote=F)
+
+write.table(ev_outliers_6sd_5pc.df, 
+            file=paste(base_folder,"data/S14_gel_only_PCA/s03_make_PCA_plots/ev_outliers_6sd_5pc.txt",sep="/"),
+            col.names=F, row.names=F, quote=F)
+
+write.table(ev_outliers_6sd_10pc.df, 
+            file=paste(base_folder,"data/S14_gel_only_PCA/s03_make_PCA_plots/ev_outliers_6sd_10pc.txt",sep="/"),
+            col.names=F, row.names=F, quote=F)
+
+# Clean-up
+rm(lo_pc1,lo_pc2,lo_pc3,lo_pc4,lo_pc5,lo_pc6,lo_pc7,lo_pc8,lo_pc9,lo_pc10,
+   hi_pc1,hi_pc2,hi_pc3,hi_pc4,hi_pc5,hi_pc6,hi_pc7,hi_pc8,hi_pc9,hi_pc10,
+   ev_outliers_6sd_3pc,ev_outliers_6sd_5pc,ev_outliers_6sd_10pc,
+   ev_outliers_6sd_3pc.df,ev_outliers_6sd_5pc.df,ev_outliers_6sd_10pc.df)
+
+```
+
+# Select eigenvectors outliers at 3 x sd
+
+```{r}
+
+# Get outliers at 3 x sd
+get_outliers.udf(3)
+
+# Combine outliers
+
+ev_outliers_3sd_3pc <- lo_pc1 | lo_pc2 | lo_pc3 | 
+                       hi_pc1 | hi_pc2 | hi_pc3
+
+ev_outliers_3sd_5pc <- lo_pc1 | lo_pc2 | lo_pc3 | lo_pc4 | lo_pc5 | 
+                       hi_pc1 | hi_pc2 | hi_pc3 | hi_pc4 | hi_pc5
+
+ev_outliers_3sd_10pc <- lo_pc1 | lo_pc2 | lo_pc3 | lo_pc4 | lo_pc5 | lo_pc6 | lo_pc7 | lo_pc8 | lo_pc9 | lo_pc10 | 
+                        hi_pc1 | hi_pc2 | hi_pc3 | hi_pc4 | hi_pc5 | hi_pc6 | hi_pc7 | hi_pc8 | hi_pc9 | hi_pc10
+
+sum(ev_outliers_3sd_3pc) # 144 outliers @ 3 x sd on 3 top PCs
+sum(ev_outliers_3sd_5pc) # 236 outliers @ 3 x sd on 5 top PCs
+sum(ev_outliers_3sd_10pc) # 249 outliers @ 3 x sd on 10 top PCs
+
+# Check the count and ethnicity of retained samples (w/o outliers @ 3 x sd on 5 top PCs)
+sum(! ev_outliers_3sd_5pc) # 8,392 ethnically similar samples retained 
+table(eigenphen.df[,"Participant.Ethnic.Category"]) # 8,498 British and 130 Irish
+table(eigenphen.df[! ev_outliers_3sd_5pc,"Participant.Ethnic.Category"]) # 8,269 British and 123 Irish
+
+# Get the samples names
+ev_outliers_3sd_3pc.df <- eigenphen.df[ev_outliers_3sd_3pc, "sample", drop=F]
+ev_outliers_3sd_5pc.df <- eigenphen.df[ev_outliers_3sd_5pc, "sample", drop=F]
+ev_outliers_3sd_10pc.df <- eigenphen.df[ev_outliers_3sd_10pc, "sample", drop=F]
+
+# Just in case - the selected samples (based on later analysis)
+selected_samples_3sd_5pc.df<- eigenphen.df[!ev_outliers_3sd_5pc, "sample", drop=F]
+
+# Write selected samples into the text file
+write.table(ev_outliers_3sd_3pc.df, 
+            file=paste(base_folder,"data/S14_gel_only_PCA/s03_make_PCA_plots/ev_outliers_3sd_3pc.txt",sep="/"),
+            col.names=F, row.names=F, quote=F)
+
+write.table(ev_outliers_3sd_5pc.df, 
+            file=paste(base_folder,"data/S14_gel_only_PCA/s03_make_PCA_plots/ev_outliers_3sd_5pc.txt",sep="/"),
+            col.names=F, row.names=F, quote=F)
+
+write.table(ev_outliers_3sd_10pc.df, 
+            file=paste(base_folder,"data/S14_gel_only_PCA/s03_make_PCA_plots/ev_outliers_3sd_10pc.txt",sep="/"),
+            col.names=F, row.names=F, quote=F)
+
+# 3sd_5pc was selected as the threshold after estimation of the PCA plots in the next step s14-s02
+write.table(selected_samples_3sd_5pc.df, 
+            file=paste(base_folder,"data/S14_gel_only_PCA/s03_make_PCA_plots/selected_samples_3sd_5pc.txt",sep="/"),
+            col.names=F, row.names=F, quote=F)
+
+# Clean-up
+rm(lo_pc1,lo_pc2,lo_pc3,lo_pc4,lo_pc5,lo_pc6,lo_pc7,lo_pc8,lo_pc9,lo_pc10,
+   hi_pc1,hi_pc2,hi_pc3,hi_pc4,hi_pc5,hi_pc6,hi_pc7,hi_pc8,hi_pc9,hi_pc10,
+   ev_outliers_3sd_3pc,ev_outliers_3sd_5pc,ev_outliers_3sd_10pc,
+   ev_outliers_3sd_3pc.df,ev_outliers_3sd_5pc.df,ev_outliers_3sd_10pc.df,
+   selected_samples_3sd_5pc.df,get_outliers.udf)
+
+```
+
+# save data
+
+```{r}
+
+save(eigenphen.df, 
+     file=paste(base_folder,"data/S14_gel_only_PCA/s03_make_PCA_plots/s01_plot_gel_only_PCA.RData",sep="/"))
+
+```
+
+# final section
+
+```{r final_section}
+
+ls()
+sessionInfo()
+Sys.time()
+
+```

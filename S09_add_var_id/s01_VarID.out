@@ -1,0 +1,52 @@
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-078.gel.zone>
+Subject: Job 511668: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S09_add_var_id/s01_add_VarID.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S09_add_var_id/s01_add_VarID.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed May  8 18:26:24 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-078.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed May  8 18:26:31 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S09_add_var_id> was used as the working directory.
+Started at Wed May  8 18:26:31 2019
+Terminated at Wed May  8 19:02:39 2019
+Results reported at Wed May  8 19:02:39 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S09_add_var_id/s01_add_VarID.sh
+------------------------------------------------------------
+
+Exited with exit code 255.
+
+Resource usage summary:
+
+    CPU time :                                   1800.38 sec.
+    Max Memory :                                 20 MB
+    Average Memory :                             15.42 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   162 MB
+    Max Processes :                              4
+    Max Threads :                                5
+    Run time :                                   2169 sec.
+    Turnaround time :                            2175 sec.
+
+The output (if any) follows:
+
+Add unique ID for each variant in VCF
+Wed  8 May 18:26:31 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S08_annotate_with_clinvar/s01_VEP_clinvar.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S09_add_var_id/results/annotated_VEP_ClinVar_VarID.vcf
+
+Working...
+Adding variants IDs to INFO field ...
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S09_add_var_id/s01_VarID.err> for stderr output of this job.
+

@@ -1,0 +1,1620 @@
+---
+title: "Female ductal breast cancer: ClinVar+LoF+FIM"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+started: CC30Jun2019  
+last updated: CC1Jul2019  
+
+# --- Summary --- #
+
+* Cases: Breast ductal Female
+    
+* Controls
+    + Female RD_controls with age >= minimal age in cases
+* Variants
+    + Clin-Var
+    + LoF
+    + FIM
+* Tests for individual variants
+    + Fisher test for crude counts per variant
+    + Logit regresion per variant (correcting for age, gender and top 5 eigenvectors)
+* Tests for variants aggregated per genes ot pathways
+    + Fisher test for aggregated crude counts per gene/pathway
+    + SKAT test for genes with single variant per gene/pathway
+    + SKAT Variance-based test for genes/pathways with multiple variants
+    + SKAT Burden test for genes/pathways with multiple variants
+
+All SKAT models correct for age, gender and top 5 eigenvectors  
+
+# --- Start section --- #
+
+### Environment
+
+<style>
+pre {
+  overflow-x: auto;
+}
+pre code {
+  word-wrap: normal;
+  white-space: pre;
+}
+</style>
+
+```{r start}
+
+# set_width
+options(width = 999)
+
+# Log time
+Sys.time()
+
+# Clean-up
+rm(list=ls())
+graphics.off()
+gc()
+
+```
+
+### Analysis settings
+
+```{r analysis_settings}
+
+cases_groups <- c("BREAST_DUCTAL")
+controls_groups <- c("RD_control")
+
+genders <- c("Female")
+
+analysis_name <-"Ductal Breast Cancer"
+working_folder <- "S18_breast_ductal" 
+
+```
+
+### Other settings
+
+```{r other_settings}
+
+# Base folder to run on Inuvika desktop
+base_folder <- "/home/ccharalambous/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution"
+
+options(stringsAsFactors = F,
+        warnPartialMatchArgs = T, 
+        warnPartialMatchAttr = T, 
+        warnPartialMatchDollar = T)
+
+library(dplyr)
+library(ggplot2)
+library(VennDiagram)
+library(svMisc) # For progress report in logit/fisher-qq-perm  
+library(SKAT)
+
+source(paste(base_folder,"scripts/f01_functions/f01_tryCatchAdv.R",sep="/"))
+source(paste(base_folder,"scripts/f01_functions/f02_fisher_variant_qq_perm.R",sep="/"))
+source(paste(base_folder,"scripts/f01_functions/f03_fisher_gene_qq_perm.R",sep="/"))
+source(paste(base_folder,"scripts/f01_functions/f04_logit_variant_qq_perm.R",sep="/"))
+source(paste(base_folder,"scripts/f01_functions/f05_qq_plot_and_lambda.R",sep="/"))
+source(paste(base_folder,"scripts/f01_functions/f06_fisher_pathway_qq_perm.R",sep="/"))
+
+```
+
+# --- Select and update the data --- #
+
+### Load source dataset  
+
+ClinVar + LoF + FIM variants
+
+```{r load_data}
+
+load(paste(base_folder,"data/S15_consolidate_dataset/s01_consolidate_dataset.RData",sep="/"))
+
+```
+
+### Add pathway column to the variants table
+
+```{r add_pathways}
+
+# For now we assign a single pathway for all genes
+pathways <- rep("FA",nrow(variants.df))
+
+# Add pathways column to variants.df
+variants.df <- data.frame(variants.df, pathways=pathways)
+
+# Clean-up
+rm(pathways)
+
+```
+
+### Select cases and controls  
+
+```{r select_cases_and_controls}
+
+# Select  samples
+cases <- phenotypes.df$Group %in% cases_groups & 
+         phenotypes.df$Sex %in% genders
+sum(cases)
+
+min_age_in_cases <- min(phenotypes.df[cases,"Age"])
+min_age_in_cases
+
+controls <- phenotypes.df$Group %in% controls_groups & 
+            phenotypes.df$Sex %in% genders &
+            phenotypes.df$Age >= min_age_in_cases
+sum(controls)
+
+selected_samples <- cases | controls
+sum(selected_samples)
+
+# Select genotypes and phenotypes
+genotypes.mx <- genotypes.mx[,selected_samples]
+phenotypes.df <- phenotypes.df[selected_samples,]
+
+# Check selected samples
+table(phenotypes.df$Group)
+
+# Clean-up
+rm(cases, controls, selected_samples)
+
+```
+
+### Update phenotypes  
+
+Recode case/control status and Sex to 0/1 for regression analysis
+
+```{r update_phenotypes}
+
+# If both genders are used: code gender as 0=Female and 1=Male
+if(length(genders) == 2){
+  gender <- rep(0, nrow(phenotypes.df))
+  1 -> gender[phenotypes.df$Sex == "Male"]
+  phenotypes.df <- data.frame(gender,phenotypes.df)
+  rm(gender)
+}
+
+# Code Group as 0=controls and 1=cases
+cc <- rep(0, nrow(phenotypes.df))
+1 -> cc[phenotypes.df$Group %in% cases_groups]
+table(cc)
+phenotypes.df <- data.frame(cc,phenotypes.df)
+
+# Remove columns not-needed for down-stream analyses
+phenotypes.df <- phenotypes.df %>% 
+  select(-Platekey,-Group,-Sex)
+
+# Rename age column (for consistency in capitalising column names)
+phenotypes.df <- phenotypes.df %>% 
+  rename(age = Age)
+
+# Clean-up
+rm(min_age_in_cases, cc, cases_groups, controls_groups)
+
+```
+
+### Remove variants with zero AC in the remained cases
+
+```{r remove_variants_with_zero_ac}
+
+# Calcilate ac
+ac <- apply(genotypes.mx, 1, sum,na.rm=T)
+
+# Identify variants to remove
+zero_ac <- ac == 0
+
+# Remove variants
+variants.df <- variants.df[!zero_ac,]
+genotypes.mx <- genotypes.mx[!zero_ac,]
+
+# Check result
+dim(variants.df)
+dim(genotypes.mx)
+
+# Clean-up
+rm(ac, zero_ac)
+
+```
+
+### Calculate ac-an-af for selected samples
+
+Calculate total ac-an-af and separately for cases and controls  
+Estimate direction of effect from crude counts  
+
+```{r calculate_ac_an_af}
+
+# Make vectors for cases and controls
+controls = phenotypes.df$cc == 0
+cases <- phenotypes.df$cc == 1
+
+# Function to calculate an
+an.udf <- function(x){2*sum(!is.na(x))}
+
+# All samples
+total_ac <- apply(genotypes.mx, 1, sum, na.rm=T)
+total_an <- apply(genotypes.mx, 1, an.udf)
+total_af <- total_ac/total_an
+
+# Cases
+cases_ac <- apply(genotypes.mx[,cases], 1, sum, na.rm=T)
+cases_an <- apply(genotypes.mx[,cases], 1, an.udf)
+cases_af <- cases_ac/cases_an
+
+# Controls
+controls_ac <- apply(genotypes.mx[,controls], 1, sum, na.rm=T)
+controls_an <- apply(genotypes.mx[,controls], 1, an.udf)
+controls_af <- controls_ac/controls_an
+
+# Check allele counts per variant
+quantile(total_ac)
+quantile(cases_ac)
+quantile(controls_ac)
+
+# Add to the varoiants table
+variants.df <- data.frame(variants.df,
+                          total_ac,total_an,total_af,
+                          cases_ac,cases_an,cases_af,
+                          controls_ac,controls_an,controls_af)
+
+# Add crude estimate of the direction of effect
+crude_effect_direction <- rep("none",nrow(variants.df))
+"protective" -> crude_effect_direction[ variants.df$cases_af < variants.df$controls_af ]
+"risk" -> crude_effect_direction[ variants.df$cases_af > variants.df$controls_af ]
+variants.df <- cbind(variants.df,crude_effect_direction)
+table(variants.df$crude_effect_direction)
+
+# Clean-up
+rm(an.udf, cases, controls,
+   total_ac,total_an,total_af,
+   cases_ac,cases_an,cases_af,
+   controls_ac,controls_an,controls_af,
+   crude_effect_direction)
+
+```
+
+# --- Explore selected data --- #
+
+### Explore remained genes
+
+```{r explore_genes}
+
+variants.df %>% 
+  group_by(SYMBOL) %>% 
+  summarise(var_count=n()) %>% 
+  arrange(desc(var_count))
+
+```
+
+### Venn diagram for the pathogenecity criteria in the remaining variants
+
+```{r explore_variants}
+
+# Select variant IDs
+ClinVar <- variants.df[variants.df$ClinVar==T, "VarID"]
+LoF <- variants.df[variants.df$LoF==T, "VarID"]
+FIM <- variants.df[variants.df$FIM==T, "VarID"]
+
+# Prepare data for plot
+g3 <- venn.diagram(
+  list(ClinVar=ClinVar, LoF=LoF, FIM=FIM),
+  filename=NULL,
+  fill = c("red", "green", "blue"), 
+  alpha = c(0.3, 0.3, 0.3), # Transparency
+  cex = 2 , # Font size 
+  category.names = c(
+    paste("ClinVar:",length(ClinVar)),
+    paste("LoF:",length(LoF)),
+    paste("FIM:",length(FIM))),
+  cat.cex = 1.5,
+  cat.pos = c(0,0,0),
+  main=paste(analysis_name,"\npathogenecity of selected variants",sep=""),
+  main.cex = 2
+)
+
+# Plot
+grid.newpage()
+grid.draw(g3)
+
+# Clean-up
+rm(ClinVar, LoF, FIM, g3)
+
+```
+
+### Compare ages in cases and controls
+
+```{r explore_ages}
+
+# Plot
+ggplot(phenotypes.df) + 
+  aes(age, fill=as.factor(cc)) +
+  geom_density(colour="black", alpha=0.3) +
+  scale_fill_discrete(name="", labels=c("0"="Controls", "1"="Cases")) +
+  ggtitle(paste(analysis_name,": Age")) +
+  xlab("years")
+
+# Means and SDs
+phenotypes.df %>% 
+  group_by(cc) %>% 
+  summarise(mean=mean(age),sd=sd(age))
+
+# t-test
+t.test(age~cc, data=phenotypes.df)
+
+```
+
+### Compare genders in cases and controls
+
+```{r explore_genders}
+
+# If two geneders are analysed
+if(length(genders)==2){
+
+  # Prepare location of text lables
+  lab1 <- sum(phenotypes.df$gender == 1 & phenotypes.df$cc == 0)
+  lab2 <- sum(phenotypes.df$gender == 0 & phenotypes.df$cc == 0)
+  lab3 <- sum(phenotypes.df$gender == 1 & phenotypes.df$cc == 1)
+  lab4 <- sum(phenotypes.df$gender == 0 & phenotypes.df$cc == 1)
+  pos1 <- lab1 / 2
+  pos2 <- lab1 + lab2 / 2
+  pos3 <- lab3 / 2
+  pos4 <- lab3 + lab4 / 2
+  
+  # Plot (note that the labels are set manually)
+  print(ggplot(phenotypes.df) + 
+          aes(as.factor(cc), fill=as.factor(gender)) +
+          geom_bar(colour="black", alpha=0.3) + 
+          scale_x_discrete(name ="", labels=c("0" = "Controls", "1" = "Cases")) +
+          scale_fill_discrete(name="Sex", labels=c("0" = "Female", "1" = "Male")) +
+          ggtitle(paste(analysis_name,": Genders")) +
+          geom_text(stat='count', label=c(lab1,lab2,lab3,lab4), y=c(pos1,pos2,pos3,pos4)))
+  
+  # Tabulate
+  x <- table(phenotypes.df[,c("cc","gender")])
+  print(x)
+    
+  # Fisher test
+  print(fisher.test(x))
+  
+  # Clean-up
+  rm(x, lab1, lab2, lab3, lab4, pos1, pos2, pos3, pos4)
+  
+# If only one hgender is included in analysis
+} else {
+  print("Only one gender is included in analysis")
+}
+
+```
+
+# --- Fisher test for crude counts per variant --- #
+
+Compared to previous p-values (calculated by previous version of the script) all checked values were within 1e-5 interval identical.  
+For the sets within this project, **1000** permutations may take 5-15 min, depending on the size of data.  
+
+### Calculate
+
+Function fisher_qq_perm() calculates:  
+
+* a vector of observed Fisher test p-values (sorted by p)
+* a vector of observed Odd ratios (in the order of sorted p-values)  
+
+* a vector of expected p-values with 95CIs (by permutations of labels)
+
+```{r calculate_fisher_test_for_variants}
+
+# Calculate
+Sys.time()
+fisher_var_perm <- fisher_variant_qq_perm(genotypes.mx = genotypes.mx,
+                    cases = phenotypes.df$cc,
+                    n_perm=100,
+                    show_progress=F)
+Sys.time()
+
+# Extract results
+or_obs <- fisher_var_perm$observed$or_values
+p_obs <- fisher_var_perm$observed$p_values
+
+p_exp <- fisher_var_perm$expected$p_values
+p_exp_05 <-fisher_var_perm$expected$p_exp_05pp
+p_exp_95 <-fisher_var_perm$expected$p_exp_95pp
+
+# Clean-up
+rm(fisher_variant_qq_perm)
+
+```
+
+### Add results to varaints table
+
+```{r add_fisher_to_variants_table}
+
+# Sync data order with the variants.df
+fisher_crude_or <- or_obs[rownames(variants.df)]
+fisher_crude_p <- p_obs[rownames(variants.df)]
+
+# Add data to variants.df
+variants.df <- cbind(variants.df, fisher_crude_or, fisher_crude_p)
+
+# Multiple testing correction: calculate FDR and add to variants.df
+fisher_crude_fdr <- p.adjust(variants.df$fisher_crude_p, method="fdr")
+variants.df <- cbind(variants.df,fisher_crude_fdr) 
+
+# Check most significant variants
+head(variants.df %>% 
+       select(Existing_variation,SYMBOL,ClinVar,LoF,FIM,total_ac,fisher_crude_or,fisher_crude_fdr,crude_effect_direction,fisher_crude_p) %>% 
+       arrange(fisher_crude_p))
+
+# Clean-up
+rm(or_obs, fisher_crude_or, fisher_crude_p, fisher_crude_fdr)
+
+```
+
+### Fisher crude counts per variant QQ-plot
+
+```{r fisher_qq_plot_crude_var}
+
+# Plot
+p <- tryCatchAdv(
+       qq_plot_and_lambda(p_obs=p_obs, p_exp=p_exp, p_exp_05=p_exp_05, p_exp_95=p_exp_95, 
+                   main=paste(analysis_name,"\nFisher test for crude counts per variant")))
+
+if(p$status=="error") print(p$message)
+
+# Clean-up
+rm(p, p_obs, p_exp, p_exp_05, p_exp_95)
+
+```
+
+# --- Logit regression for variants --- #
+
+Compared to previous p-values (calculated by previous version of the script) all checked values were within 1e-5 interval identical.  
+For the sets within this project, **100** permutations may take up to 15 min, depending on the size of data (~3hrs for 1000 permutations).  
+
+### Calculate
+
+Function logit_qq_perm() calculates:  
+
+* a vector of observed Logit (LRT) test p-values (sorted by p)
+* a vector of observed Logit beta values (in the order of sorted p-values)
+* a vector of exit status of the glm() function ( success, warning, error; in the order of sorted p-values)
+* a vector of messages from of the glm() function (in the order of sorted p-values)  
+
+* a vector of expected p-values with 95CIs (by permutations of labels)
+
+```{r calculate_glm_var}
+
+# Calculate
+Sys.time()
+glm_var_perm <- logit_variant_qq_perm(genotypes.mx=genotypes.mx, 
+                   phenotypes.df=phenotypes.df, 
+                   n_perm=100,
+                   show_progress=F)
+Sys.time()
+
+# Extract results
+glm_p_obs <- glm_var_perm$observed$glm_p
+glm_beta_obs <- glm_var_perm$observed$glm_beta
+glm_status_obs <- glm_var_perm$observed$glm_status
+glm_message_obs <- glm_var_perm$observed$glm_message
+
+glm_p_exp <- glm_var_perm$expected$p_values
+glm_p_exp_05 <- glm_var_perm$expected$p_exp_05pp
+glm_p_exp_95 <- glm_var_perm$expected$p_exp_95pp
+
+# Clean-up
+rm(logit_variant_qq_perm)
+
+```
+
+### Add glm results to the variants table
+
+```{r add_glm_to_variants_table}
+
+# Sync data order with the variants.df
+glm_p <- glm_p_obs[rownames(variants.df)]
+glm_beta <- glm_beta_obs[rownames(variants.df)]
+glm_status <- glm_status_obs[rownames(variants.df)]
+glm_message <- glm_message_obs[rownames(variants.df)]
+
+# Add data to variants.df
+variants.df <- cbind(variants.df, glm_p, glm_beta, glm_status, glm_message)
+
+# Multiple testing correction: calculate FDR and add to variants.df
+glm_fdr <- p.adjust(variants.df$glm_p, method="fdr")
+variants.df <- cbind(variants.df,glm_fdr) 
+
+# Check most significant variants
+head(variants.df %>% 
+       select(Existing_variation,SYMBOL,ClinVar,LoF,FIM,total_ac,glm_beta,glm_fdr,crude_effect_direction,glm_p,glm_status) %>% 
+       filter(glm_status  == "succeeded") %>% 
+       arrange(glm_p))
+
+# Clean-up
+rm(glm_fdr,glm_p,glm_beta,glm_status,glm_message,glm_beta_obs, glm_message_obs)
+
+```
+
+### Make QQ-plot
+
+```{r glm_qq_plot}
+
+# Select only p-values for successful glm
+p_obs <- glm_p_obs[glm_status_obs == "succeeded"]
+p_exp <- glm_p_exp[glm_status_obs == "succeeded"]
+p_exp_05 <- glm_p_exp_05[glm_status_obs == "succeeded"]
+p_exp_95 <- glm_p_exp_95[glm_status_obs == "succeeded"]
+
+# Make QQ plot
+p <- tryCatchAdv(qq_plot_and_lambda(p_obs=p_obs, p_exp=p_exp, p_exp_05=p_exp_05, p_exp_95=p_exp_95,
+                   main=paste(analysis_name,"\nLogit regression for individual variants")))
+
+if(p$status=="error") print(p$message)
+
+# Clean-up
+rm(p, p_obs, p_exp, p_exp_05, p_exp_95, 
+   glm_p_obs, glm_p_exp, glm_p_exp_05, glm_p_exp_95, 
+   glm_status_obs)
+
+```
+
+# --- Aggregate crude counts per gene --- #
+
+```{r aggregate_counts_per_gene}
+
+# Aggregate in dplyr style
+genes.df <- variants.df %>% 
+  group_by(SYMBOL) %>% 
+  summarise(total_var=n(),
+            ClinVar=sum(ClinVar),LoF=sum(LoF),FIM=sum(FIM),
+            total_aggr_ac=sum(total_ac),total_aggr_an=sum(total_an),
+            cases_aggr_ac=sum(cases_ac),cases_aggr_an=sum(cases_an),
+            controls_aggr_ac=sum(controls_ac),controls_aggr_an=sum(controls_an)) %>% 
+  mutate(total_aggr_af=total_aggr_ac/total_aggr_an,
+         cases_aggr_af=cases_aggr_ac/cases_aggr_an,
+         controls_aggr_af=controls_aggr_ac/controls_aggr_an) %>% 
+  arrange(desc(total_var))
+
+# Get rid of the tibble data format (just because I like the pure data.frame more)
+genes.df <- as.data.frame(genes.df)
+
+# Add Rownames
+rownames(genes.df) <- genes.df$SYMBOL
+
+# Crude estimate of the direction of effect
+crude_effect_direction <- rep("none",nrow(genes.df))
+"protective" -> crude_effect_direction[ genes.df$cases_aggr_af < genes.df$controls_aggr_af ]
+"risk" -> crude_effect_direction[ genes.df$cases_aggr_af > genes.df$controls_aggr_af ]
+genes.df <- cbind(genes.df,crude_effect_direction)
+
+# Look at result
+genes.df
+
+# Get list of genes
+genes <- genes.df$SYMBOL
+
+# Clean-up
+rm(crude_effect_direction)
+
+```
+
+# --- Fisher test for gene-aggregated crude counts --- #
+
+### Calculate
+
+```{r calculate_fisher_test_for_genes}
+
+# Calculate
+Sys.time()
+fisher_gen_perm <- fisher_gene_qq_perm(genotypes.mx = genotypes.mx,
+                                       variants.df = variants.df,
+                                       cases = phenotypes.df$cc,
+                                       n_perm=100,
+                                       show_progress=F)
+Sys.time()
+
+# Extract results
+or_obs <- fisher_gen_perm$observed$or_values
+p_obs <- fisher_gen_perm$observed$p_values
+
+p_exp <- fisher_gen_perm$expected$p_values
+p_exp_05 <- fisher_gen_perm$expected$p_exp_05pp
+p_exp_95 <- fisher_gen_perm$expected$p_exp_95pp
+
+# Clean-up
+rm(fisher_gene_qq_perm)
+
+```
+
+### Add to the genes table
+
+```{r add_fisher_to_genes_table}
+
+# Sync data order with the variants.df
+fisher_crude_or <- or_obs[genes.df$SYMBOL]
+fisher_crude_p <- p_obs[genes.df$SYMBOL]
+
+# Add data to variants.df
+genes.df <- cbind(genes.df, fisher_crude_or, fisher_crude_p)
+
+# Multiple testing correction: calculate FDR and add to variants.df
+fisher_crude_fdr <- p.adjust(genes.df$fisher_crude_p, method="fdr")
+genes.df <- cbind(genes.df,fisher_crude_fdr) 
+
+# Check most significant variants
+genes.df %>% 
+  select(SYMBOL,total_var,ClinVar,LoF,FIM,total_aggr_ac,fisher_crude_or,
+         fisher_crude_fdr,crude_effect_direction,fisher_crude_p) %>% 
+  arrange(fisher_crude_p)
+
+# Clean-up
+rm(or_obs, fisher_crude_or, fisher_crude_p, fisher_crude_fdr)
+
+```
+
+### QQ-plot
+
+```{r fisher_qq_plot_crude_gene}
+
+# Plot
+p <- tryCatchAdv(qq_plot_and_lambda(p_obs=p_obs, p_exp=p_exp, p_exp_05=p_exp_05, p_exp_95=p_exp_95, 
+                   main=paste(analysis_name,"\nFisher test for crude counts per gene")))
+
+if(p$status=="error") print(p$message)
+
+# Clean-up
+rm(p_obs, p_exp, p_exp_05, p_exp_95)
+
+```
+
+# --- Prepare data for SKAT tests --- #
+
+### Prepare matrices with phenotypes, genotypes and covariates
+
+Split/group phenotypes and and make them to matrices.   
+Transpose genotypes.  
+
+```{r prepare_data_for_SKAT}
+
+# Outcomes
+Y <- phenotypes.df$cc
+sum(is.na(Y)) # 0
+
+# Eigenvectors
+E <- as.matrix(phenotypes.df[,c("PC1","PC2","PC3","PC4","PC5")])
+sum(is.na(E)) # 0
+
+# Confounders (=covariates) 
+if(length(genders)==2){
+  C <- as.matrix(phenotypes.df[,c("gender","age")])
+}else{
+  C <- phenotypes.df$age
+}
+  
+sum(is.na(C)) # 0
+
+# Genotypes: transpose (!) non-aggregated non-imputed variants
+G <- t(genotypes.mx)
+dim(G)
+#G[1:5,1:5]
+
+# Missed genotypes are allowed (within reason ...)
+# Do NOT impute missed genotypes (they are handled by SKAT)
+sum(is.na(G))/(ncol(G)*nrow(G)) # ~0.00005
+
+# Make sure that order of samples in G (after transposition) is 
+# still the same as order of samples in phenotypes (just a sanity check...)
+sum(rownames(G) != rownames(phenotypes.df))
+
+```
+
+### Null model
+
+The same null-model for all genes and tests; out_type="D" for the dichotomous outcome  
+
+```{r skat_null_model}
+
+skat_null <- SKAT_Null_Model(Y ~ C + E, out_type="D")
+
+```
+
+# --- SKAT single-variant test per gene --- #
+
+### Calculate
+
+```{r calculate_SKAT_single}
+
+# Prepare empty matrix for results
+# (do not use data frame instead of matrix: it may cause issues later with rbind)  
+result.mx <- matrix(ncol=8, nrow=0) 
+colnames(result.mx) <- c("gene", "num_var", 
+         "skat_single_p",  "skat_single_is_accurate", "skat_single_mac", "skat_single_map", 
+         "skat_single_status","skat_single_message")
+
+# For each gene
+for(gene in genes){
+
+  # Initialise results to NA
+  # results that will not be possible to calculate remain NA
+  vars <- NA
+  num_vars <- NA
+  skat_single_test <- NA
+  skat_single_p <- NA
+  skat_single_is_accurate <- NA
+  skat_single_mac <- NA  
+  skat_single_map <- NA
+  skat_single_status <- NA
+  skat_single_message <- NA
+  X <- NA
+
+  # Get variant IDs
+  vars <- variants.df[variants.df$SYMBOL==gene, "VarID"]
+  
+  # Get number of variants
+  num_vars <- length(vars)
+
+  # If there is just one variant per gene
+  if(num_vars == 1){
+
+    # Get matrix of genotypes for the variant  
+    X <- G[,vars]
+
+    # Try to calculate SKAT test for a single variant and binary outcomes (SKATBinary_Single) 
+    # with efficient resampling (method.bin = "ER")
+    skat_single_test <- tryCatchAdv( SKATBinary_Single(X, skat_null, method.bin = "ER") )
+    
+    # Get status (success, warning, error)
+    skat_single_status <- skat_single_test$status
+  
+    # Get error/warning message, if any
+    if(skat_single_status != "succeeded"){
+      skat_single_message <- skat_single_test$message$message
+    }
+  
+    # If SKAT completed with success or warning
+    if(skat_single_status != "error"){
+    
+      # Extract the results
+      skat_single_test <- skat_single_test$value # Get results out of the tryCatchAdv list
+      skat_single_p <- skat_single_test$p.value
+      skat_single_is_accurate <- skat_single_test$is.accurate # Was resampling suficient ?
+      skat_single_mac <- skat_single_test$MAC # Minimal (aggregated) Allele Count 
+      skat_single_map <- skat_single_test$MAP # Minimal Acheaved P-value (for adjusted QQ-plot)
+    }
+  } 
+  
+  # Add results to matrix
+  result.mx <- rbind(result.mx, c(gene, num_vars, 
+                skat_single_p, skat_single_is_accurate, skat_single_mac, skat_single_map, 
+                skat_single_status, skat_single_message))
+
+} # next gene
+
+# explore result
+dim(result.mx)
+
+# Clean-up
+rm(gene, vars, num_vars, X, 
+   skat_single_test, skat_single_p, skat_single_is_accurate, skat_single_mac, skat_single_map, 
+   skat_single_status, skat_single_message)
+
+```
+
+### Update result matrix and add it to genes.df
+
+```{r update_SKAT_single_gene}
+
+# Convert to data frame
+result.df <- as.data.frame(result.mx)
+#str(result.df)
+
+# Update type of numeric fields
+result.df$num_var <- as.integer(result.df$num_var)
+result.df$skat_single_p <- as.numeric(result.df$skat_single_p)
+result.df$skat_single_is_accurate <- as.logical(result.df$skat_single_is_accurate)
+result.df$skat_single_mac <- as.integer(result.df$skat_single_mac)
+result.df$skat_single_map <- as.numeric(result.df$skat_single_map)
+#str(result.df)
+
+# Move VarID to row names
+rownames(result.df) <- result.df$gene
+result.df <- result.df[,c(-1,-2)]
+#result.df[1:5,]
+
+# Add result to genes table
+sum(rownames(result.df) != rownames(genes.df))
+genes.df <- cbind(genes.df,result.df) 
+
+# Multiple testing correction: calculate FDR
+skat_single_fdr <- p.adjust(genes.df$skat_single_p, method="fdr")
+genes.df <- cbind(genes.df,skat_single_fdr) 
+
+# Check most significant variants 
+# (consider filter for p < 0.05 etc, if a large number of genes is analysed)
+genes.df %>% 
+  select(SYMBOL,total_var,ClinVar,LoF,FIM,skat_single_mac,skat_single_fdr,crude_effect_direction,
+         skat_single_p,skat_single_is_accurate,skat_single_status, skat_single_message) %>% 
+  arrange(skat_single_p)
+
+# Clean-up
+rm(result.mx,skat_single_fdr,result.df)
+
+```
+
+### QQ plot for SKAT-single
+
+Not relevant for such a small number of genes
+
+# --- SKAT Variance-based test for genes --- #
+
+### Calculate
+
+```{r calculate_SKAT_variance_gene}
+
+# Prepare empty matrix for results
+result.mx <- matrix(ncol=8, nrow=0) 
+colnames(result.mx) <- c("gene", "num_var", 
+         "skat_variance_p",  "skat_variance_is_accurate", "skat_variance_mac", "skat_variance_map", 
+         "skat_variance_status","skat_variance_message")
+
+# For each gene
+for(gene in genes){
+
+  # Initialise results to NA
+  # results that will not be possible to calculate remain NA
+  vars <- NA
+  num_vars <- NA
+  skat_variance_test <- NA
+  skat_variance_p <- NA
+  skat_variance_is_accurate <- NA
+  skat_variance_mac <- NA  
+  skat_variance_map <- NA
+  skat_variance_status <- NA
+  skat_variance_message <- NA
+  X <- NA
+
+  # Get variant IDs
+  vars <- variants.df[variants.df$SYMBOL==gene, "VarID"]
+  
+  # Get number of variants
+  num_vars <- length(vars)
+
+  # If there are more tan one variants per gene
+  if(num_vars > 1){
+
+    # Get matrix of genotypes for the gene variants in the gene  
+    X <- G[,vars]
+
+    # Try to calculate variance-based (method="SKAT") test for binary outcomes with efficient resampling (method.bin = "ER")
+    skat_variance_test <- tryCatchAdv( SKATBinary(X, skat_null, method="SKAT", method.bin = "ER") )
+    
+    # Get status (success, warning, error)
+    skat_variance_status <- skat_variance_test$status
+  
+    # Get error/warning message, if any
+    if(skat_variance_status != "succeeded"){
+      skat_variance_message <- skat_variance_test$message$message
+    }
+  
+    # If SKAT completed with success or warning
+    if(skat_variance_status != "error"){
+    
+      # Extract the results
+      skat_variance_test <- skat_variance_test$value # Get results out of the tryCatchAdv list
+      skat_variance_p <- skat_variance_test$p.value
+      skat_variance_is_accurate <- skat_variance_test$is.accurate # Was resampling suficient ?
+      skat_variance_mac <- skat_variance_test$MAC # Minimal (aggregated) Allele Count 
+      skat_variance_map <- skat_variance_test$MAP # Minimal Acheaved P-value (for adjusted QQ-plot)
+    }
+  } 
+  
+  # Add results to matrix
+  result.mx <- rbind(result.mx, c(gene, num_vars, 
+                skat_variance_p, skat_variance_is_accurate, skat_variance_mac, skat_variance_map, 
+                skat_variance_status, skat_variance_message))
+
+} # next gene
+
+# explore result
+dim(result.mx)
+
+# Clean-up
+rm(gene, vars, num_vars, X, 
+   skat_variance_test, skat_variance_p, skat_variance_is_accurate, skat_variance_mac, skat_variance_map, 
+   skat_variance_status, skat_variance_message)
+
+```
+
+### Update result matrix and add it to genes.df
+
+```{r update_SKAT_variance_results_gene}
+
+# Convert to data frame
+result.df <- as.data.frame(result.mx)
+#str(result.df)
+
+# Update type of numeric fields
+result.df$num_var <- as.integer(result.df$num_var)
+result.df$skat_variance_p <- as.numeric(result.df$skat_variance_p)
+result.df$skat_variance_is_accurate <- as.logical(result.df$skat_variance_is_accurate)
+result.df$skat_variance_mac <- as.integer(result.df$skat_variance_mac)
+result.df$skat_variance_map <- as.numeric(result.df$skat_variance_map)
+#str(result.df)
+
+# Move VarID to row names
+rownames(result.df) <- result.df$gene
+result.df <- result.df[,c(-1,-2)]
+#result.df[1:5,]
+
+# Add result to genes table
+sum(rownames(result.df) != rownames(genes.df))
+genes.df <- cbind(genes.df,result.df) 
+
+# Multiple testing correction: calculate FDR
+skat_variance_fdr <- p.adjust(genes.df$skat_variance_p, method="fdr")
+genes.df <- cbind(genes.df,skat_variance_fdr) 
+
+# Check most significant variants
+genes.df %>% 
+  select(SYMBOL,total_var,ClinVar,LoF,FIM,skat_variance_mac,skat_variance_fdr,crude_effect_direction,
+         skat_variance_p,skat_variance_is_accurate,skat_variance_status, skat_variance_message) %>% 
+  arrange(skat_variance_p)
+
+# Clean-up
+rm(result.mx,skat_variance_fdr,result.df)
+
+```
+
+### QQ plot for SKAT Variance-based test for genes
+
+```{r qq_plot_SKAT_variance_based_gene}
+
+QQPlot_Adj(genes.df$skat_variance_p, genes.df$skat_variance_map, Is.unadjsted = F, 
+           main=paste(analysis_name,"\nSKAT Variance-based test for genes"))
+
+```
+
+# --- SKAT Burden test for genes --- #
+
+### Calculate
+
+```{r calculate_SKAT_burden_test_gene}
+
+# Prepare empty matrix for results
+result.mx <- matrix(ncol=8, nrow=0) 
+colnames(result.mx) <- c("gene", "num_var", 
+         "skat_burden_p",  "skat_burden_is_accurate", "skat_burden_mac", "skat_burden_map", 
+         "skat_burden_status","skat_burden_message")
+
+# For each gene
+for(gene in genes){
+
+  # Initialise results to NA
+  # results that will not be possible to calculate remain NA
+  vars <- NA
+  num_vars <- NA
+  skat_burden_test <- NA
+  skat_burden_p <- NA
+  skat_burden_is_accurate <- NA
+  skat_burden_mac <- NA  
+  skat_burden_map <- NA
+  skat_burden_status <- NA
+  skat_burden_message <- NA
+  X <- NA
+
+  # Get variant IDs
+  vars <- variants.df[variants.df$SYMBOL==gene, "VarID"]
+  
+  # Get number of variants
+  num_vars <- length(vars)
+
+  # If there are more tan one variants per gene
+  if(num_vars > 1){
+
+    # Get matrix of genotypes for the gene variants in the gene  
+    X <- G[,vars]
+
+    # Try to calculate burden test (method="Burden") test for binary outcomes with efficient resampling (method.bin = "ER")
+    skat_burden_test <- tryCatchAdv( SKATBinary(X, skat_null, method="Burden", method.bin = "ER") )
+    
+    # Get status (success, warning, error)
+    skat_burden_status <- skat_burden_test$status
+  
+    # Get error/warning message, if any
+    if(skat_burden_status != "succeeded"){
+      skat_burden_message <- skat_burden_test$message$message
+    }
+  
+    # If SKAT completed with success or warning
+    if(skat_burden_status != "error"){
+    
+      # Extract the results
+      skat_burden_test <- skat_burden_test$value # Get results out of the tryCatchAdv list
+      skat_burden_p <- skat_burden_test$p.value
+      skat_burden_is_accurate <- skat_burden_test$is.accurate # Was resampling suficient ?
+      skat_burden_mac <- skat_burden_test$MAC # Minimal (aggregated) Allele Count 
+      skat_burden_map <- skat_burden_test$MAP # Minimal Acheaved P-value (for adjusted QQ-plot)
+    }
+  } 
+  
+  # Add results to matrix
+  result.mx <- rbind(result.mx, c(gene, num_vars, 
+                skat_burden_p, skat_burden_is_accurate, skat_burden_mac, skat_burden_map, 
+                skat_burden_status, skat_burden_message))
+
+} # next gene
+
+# explore result
+dim(result.mx)
+
+# Clean-up
+rm(gene, genes, vars, num_vars, X, 
+   skat_burden_test, skat_burden_p, skat_burden_is_accurate, skat_burden_mac, skat_burden_map, 
+   skat_burden_status, skat_burden_message)
+
+```
+
+### Update result matrix and add it to genes.df
+
+```{r update_SKAT_burden_gene}
+
+# Convert to data frame
+result.df <- as.data.frame(result.mx)
+#str(result.df)
+
+# Update type of numeric fields
+result.df$num_var <- as.integer(result.df$num_var)
+result.df$skat_burden_p <- as.numeric(result.df$skat_burden_p)
+result.df$skat_burden_is_accurate <- as.logical(result.df$skat_burden_is_accurate)
+result.df$skat_burden_mac <- as.integer(result.df$skat_burden_mac)
+result.df$skat_burden_map <- as.numeric(result.df$skat_burden_map)
+#str(result.df)
+
+rownames(result.df) <- result.df$gene # Move gene name to row names
+result.df <- result.df[,c(-1,-2)] # Remove gene name and num of vars (already present in genes.df)
+#result.df[1:5,]
+
+# Add result to genes.df table
+sum(rownames(result.df) != rownames(genes.df))
+genes.df <- cbind(genes.df,result.df) 
+
+# Multiple testing correction: calculate FDR
+skat_burden_fdr <- p.adjust(genes.df$skat_burden_p, method="fdr")
+genes.df <- cbind(genes.df,skat_burden_fdr) 
+
+# Check most significant variants
+genes.df %>% 
+  select(SYMBOL,total_var,ClinVar,LoF,FIM,skat_burden_mac,skat_burden_fdr,crude_effect_direction,
+         skat_burden_p,skat_burden_is_accurate,skat_burden_status, skat_burden_message) %>% 
+  arrange(skat_burden_p)
+
+# Clean-up
+rm(result.mx,skat_burden_fdr,result.df)
+
+```
+
+### QQ plot for SKAT Burden test for genes
+
+```{r qq_plot_SKAT_burden_gene}
+
+QQPlot_Adj(genes.df$skat_burden_p, genes.df$skat_burden_map, Is.unadjsted = F, 
+           main=paste(analysis_name,"\nSKAT Burden test for genes"))
+
+```
+
+# --- Aggregate crude counts per pathway --- #
+
+```{r aggregate_counts_per_pathway}
+
+# Aggregate in dplyr style
+pathways.df <- variants.df %>% 
+  group_by(pathways) %>% 
+  summarise(total_var=n(),
+            ClinVar=sum(ClinVar),LoF=sum(LoF),FIM=sum(FIM),
+            total_aggr_ac=sum(total_ac),total_aggr_an=sum(total_an),
+            cases_aggr_ac=sum(cases_ac),cases_aggr_an=sum(cases_an),
+            controls_aggr_ac=sum(controls_ac),controls_aggr_an=sum(controls_an)) %>% 
+  mutate(total_aggr_af=total_aggr_ac/total_aggr_an,
+         cases_aggr_af=cases_aggr_ac/cases_aggr_an,
+         controls_aggr_af=controls_aggr_ac/controls_aggr_an) %>% 
+  arrange(desc(total_var))
+
+# Get rid of the tibble data format (just because I like the pure data.frame more)
+pathways.df <- as.data.frame(pathways.df)
+
+# Add Rownames
+rownames(pathways.df) <- pathways.df$pathways
+
+# Crude estimate of the direction of effect
+crude_effect_direction <- rep("none",nrow(pathways.df))
+"protective" -> crude_effect_direction[ pathways.df$cases_aggr_af < pathways.df$controls_aggr_af ]
+"risk" -> crude_effect_direction[ pathways.df$cases_aggr_af > pathways.df$controls_aggr_af ]
+pathways.df <- cbind(pathways.df,crude_effect_direction)
+
+# Look at result
+pathways.df
+
+# Make pathways list
+pathways <- pathways.df$pathways
+
+# Clean-up
+rm(crude_effect_direction)
+
+```
+
+# --- Fisher test for crude counts per pathway --- #
+
+### Calculate
+
+```{r calculate_fisher_test_for_pathways}
+
+# Calculate
+Sys.time()
+fisher_path_perm <- fisher_pathway_qq_perm(genotypes.mx = genotypes.mx,
+                                       variants.df = variants.df,
+                                       cases = phenotypes.df$cc,
+                                       n_perm=100,
+                                       show_progress=F)
+Sys.time()
+
+# Extract results
+or_obs <- fisher_path_perm$observed$or_values
+p_obs <- fisher_path_perm$observed$p_values
+
+p_exp <- fisher_path_perm$expected$p_values
+p_exp_05 <- fisher_path_perm$expected$p_exp_05pp
+p_exp_95 <- fisher_path_perm$expected$p_exp_95pp
+
+# Clean-up
+rm(fisher_pathway_qq_perm)
+
+```
+
+### Add fisher test results to the pathways table
+
+```{r add_fisher_to_pathways_table}
+
+# Sync data order with the variants.df
+fisher_crude_or <- or_obs[pathways.df$pathways]
+fisher_crude_p <- p_obs[pathways.df$pathways]
+
+# Add data to pathways.df
+pathways.df <- cbind(pathways.df, fisher_crude_or, fisher_crude_p)
+
+# Multiple testing correction: calculate FDR and add to variants.df
+fisher_crude_fdr <- p.adjust(pathways.df$fisher_crude_p, method="fdr")
+pathways.df <- cbind(pathways.df,fisher_crude_fdr) 
+
+# Check most significant variants
+pathways.df %>% 
+  select(pathways,total_var,ClinVar,LoF,FIM,total_aggr_ac,fisher_crude_fdr,
+         crude_effect_direction,fisher_crude_p,fisher_crude_or) %>% 
+  arrange(fisher_crude_p)
+
+# Clean-up
+rm(or_obs, fisher_crude_or, fisher_crude_p, fisher_crude_fdr)
+
+```
+
+### QQ-plot
+
+Not relevant for pathway number < 10
+
+```{r pathway_fisher_qq_plot_crude_pathway}
+
+# Plot
+#p <- tryCatchAdv(qq_plot_and_lambda(p_obs=p_obs, p_exp=p_exp, p_exp_05=p_exp_05, p_exp_95=p_exp_95, 
+#                   main=paste(analysis_name,"\nFisher test for crude counts per pathway")))
+#if(p$status=="error") print(p$message)
+
+# Clean-up
+rm(p,p_obs, p_exp, p_exp_05, p_exp_95, qq_plot_and_lambda)
+
+```
+
+# --- SKAT single-variant test for pathways --- #
+
+Its unlikely to have a single variant per pathway. Hhowever, this ection is still kept here just in case.  
+
+### Calculate
+
+```{r calculate_SKAT_single_pathway}
+
+# Prepare empty matrix for results
+# (do not use data frame instead of matrix: it may cause issues later with rbind)  
+result.mx <- matrix(ncol=8, nrow=0) 
+colnames(result.mx) <- c("pathway", "num_var", 
+         "skat_single_p",  "skat_single_is_accurate", "skat_single_mac", "skat_single_map", 
+         "skat_single_status","skat_single_message")
+
+# For each gene
+for(pathway in pathways){
+
+  # Initialise results to NA
+  # results that will not be possible to calculate remain NA
+  vars <- NA
+  num_vars <- NA
+  skat_single_test <- NA
+  skat_single_p <- NA
+  skat_single_is_accurate <- NA
+  skat_single_mac <- NA  
+  skat_single_map <- NA
+  skat_single_status <- NA
+  skat_single_message <- NA
+  X <- NA
+
+  # Get variant IDs
+  vars <- variants.df[variants.df$pathways==pathway, "VarID"]
+  
+  # Get number of variants
+  num_vars <- length(vars)
+
+  # If there is just one variant per gene
+  if(num_vars == 1){
+
+    # Get matrix of genotypes for the variant  
+    X <- G[,vars]
+
+    # Try to calculate SKAT test for a single variant and binary outcomes (SKATBinary_Single) 
+    # with efficient resampling (method.bin = "ER")
+    skat_single_test <- tryCatchAdv( SKATBinary_Single(X, skat_null, method.bin = "ER") )
+    
+    # Get status (success, warning, error)
+    skat_single_status <- skat_single_test$status
+  
+    # Get error/warning message, if any
+    if(skat_single_status != "succeeded"){
+      skat_single_message <- skat_single_test$message$message
+    }
+  
+    # If SKAT completed with success or warning
+    if(skat_single_status != "error"){
+    
+      # Extract the results
+      skat_single_test <- skat_single_test$value # Get results out of the tryCatchAdv list
+      skat_single_p <- skat_single_test$p.value
+      skat_single_is_accurate <- skat_single_test$is.accurate # Was resampling suficient ?
+      skat_single_mac <- skat_single_test$MAC # Minimal (aggregated) Allele Count 
+      skat_single_map <- skat_single_test$MAP # Minimal Acheaved P-value (for adjusted QQ-plot)
+    }
+  } 
+  
+  # Add results to matrix
+  result.mx <- rbind(result.mx, c(pathway, num_vars, 
+                skat_single_p, skat_single_is_accurate, skat_single_mac, skat_single_map, 
+                skat_single_status, skat_single_message))
+
+} # next  pathway
+
+# explore result
+dim(result.mx)
+
+# Clean-up
+rm(pathway, vars, num_vars, X, 
+   skat_single_test, skat_single_p, skat_single_is_accurate, skat_single_mac, skat_single_map, 
+   skat_single_status, skat_single_message)
+
+```
+
+### Update result matrix and add it to pathways.df
+
+```{r update_SKAT_single_pathway}
+
+# Convert to data frame
+result.df <- as.data.frame(result.mx)
+#str(result.df)
+
+# Update type of numeric fields
+result.df$num_var <- as.integer(result.df$num_var)
+result.df$skat_single_p <- as.numeric(result.df$skat_single_p)
+result.df$skat_single_is_accurate <- as.logical(result.df$skat_single_is_accurate)
+result.df$skat_single_mac <- as.integer(result.df$skat_single_mac)
+result.df$skat_single_map <- as.numeric(result.df$skat_single_map)
+#str(result.df)
+
+# Move VarID to row names
+rownames(result.df) <- result.df$pathway
+result.df <- result.df[,c(-1,-2)]
+#head(result.df)
+
+# Add result to genes table
+sum(rownames(result.df) != rownames(pathways.df))
+pathways.df <- cbind(pathways.df,result.df) 
+
+# Multiple testing correction: calculate FDR
+skat_single_fdr <- p.adjust(pathways.df$skat_single_p, method="fdr")
+pathways.df <- cbind(pathways.df,skat_single_fdr) 
+
+# Check most significant variants 
+# (consider filter for p < 0.05 etc, if a large number of genes is analysed)
+pathways.df %>% 
+  select(pathways,total_var,ClinVar,LoF,FIM,skat_single_mac,skat_single_fdr,crude_effect_direction,
+         skat_single_p,skat_single_is_accurate,skat_single_status, skat_single_message) %>% 
+  arrange(skat_single_p)
+
+# Clean-up
+rm(result.mx,skat_single_fdr,result.df)
+
+```
+
+### QQ plot for SKAT-single test for pathways
+
+Not relevant for number of pathways < 10
+
+# --- SKAT Variance-based test for pathways --- #
+
+### Calculate
+
+```{r calculate_SKAT_variance_pathway}
+
+# Prepare empty matrix for results
+result.mx <- matrix(ncol=8, nrow=0) 
+colnames(result.mx) <- c("pathway", "num_var", 
+         "skat_variance_p",  "skat_variance_is_accurate", "skat_variance_mac", "skat_variance_map", 
+         "skat_variance_status","skat_variance_message")
+
+# For each  pathway
+for( pathway in  pathways){
+
+  # Initialise results to NA
+  # results that will not be possible to calculate remain NA
+  vars <- NA
+  num_vars <- NA
+  skat_variance_test <- NA
+  skat_variance_p <- NA
+  skat_variance_is_accurate <- NA
+  skat_variance_mac <- NA  
+  skat_variance_map <- NA
+  skat_variance_status <- NA
+  skat_variance_message <- NA
+  X <- NA
+
+  # Get variant IDs
+  vars <- variants.df[variants.df$pathways == pathway, "VarID"]
+  
+  # Get number of variants
+  num_vars <- length(vars)
+
+  # If there are more tan one variants per  pathway
+  if(num_vars > 1){
+
+    # Get matrix of genotypes for the  pathway variants in the  pathway  
+    X <- G[,vars]
+
+    # Try to calculate variance-based (method="SKAT") test for binary outcomes with efficient resampling (method.bin = "ER")
+    skat_variance_test <- tryCatchAdv( SKATBinary(X, skat_null, method="SKAT", method.bin = "ER") )
+    
+    # Get status (success, warning, error)
+    skat_variance_status <- skat_variance_test$status
+  
+    # Get error/warning message, if any
+    if(skat_variance_status != "succeeded"){
+      skat_variance_message <- skat_variance_test$message$message
+    }
+  
+    # If SKAT completed with success or warning
+    if(skat_variance_status != "error"){
+    
+      # Extract the results
+      skat_variance_test <- skat_variance_test$value # Get results out of the tryCatchAdv list
+      skat_variance_p <- skat_variance_test$p.value
+      skat_variance_is_accurate <- skat_variance_test$is.accurate # Was resampling suficient ?
+      skat_variance_mac <- skat_variance_test$MAC # Minimal (aggregated) Allele Count 
+      skat_variance_map <- skat_variance_test$MAP # Minimal Acheaved P-value (for adjusted QQ-plot)
+    }
+  } 
+  
+  # Add results to matrix
+  result.mx <- rbind(result.mx, c(pathway, num_vars, 
+                skat_variance_p, skat_variance_is_accurate, skat_variance_mac, skat_variance_map, 
+                skat_variance_status, skat_variance_message))
+
+} # next pathway
+
+# explore result
+dim(result.mx)
+
+# Clean-up
+rm(pathway, vars, num_vars, X, 
+   skat_variance_test, skat_variance_p, skat_variance_is_accurate, skat_variance_mac, skat_variance_map, 
+   skat_variance_status, skat_variance_message)
+
+```
+
+### Update result matrix and add it to pathways.df
+
+```{r update_SKAT_variance_results_pathway}
+
+# Convert to data frame
+result.df <- as.data.frame(result.mx)
+#str(result.df)
+
+# Update type of numeric fields
+result.df$num_var <- as.integer(result.df$num_var)
+result.df$skat_variance_p <- as.numeric(result.df$skat_variance_p)
+result.df$skat_variance_is_accurate <- as.logical(result.df$skat_variance_is_accurate)
+result.df$skat_variance_mac <- as.integer(result.df$skat_variance_mac)
+result.df$skat_variance_map <- as.numeric(result.df$skat_variance_map)
+#str(result.df)
+
+# Move VarID to row names
+rownames(result.df) <- result.df$pathway
+result.df <- result.df[,c(-1,-2)]
+#head(result.df)
+
+# Add result to pathways table
+sum(rownames(result.df) != rownames(pathways.df))
+pathways.df <- cbind(pathways.df,result.df) 
+
+# Multiple testing correction: calculate FDR
+skat_variance_fdr <- p.adjust(pathways.df$skat_variance_p, method="fdr")
+pathways.df <- cbind(pathways.df,skat_variance_fdr) 
+
+# Check most significant variants
+pathways.df %>% 
+  select(pathways,total_var,ClinVar,LoF,FIM,skat_variance_mac,skat_variance_fdr,crude_effect_direction,
+         skat_variance_p,skat_variance_is_accurate,skat_variance_status,skat_variance_message) %>% 
+  arrange(skat_variance_p)
+
+# Clean-up
+rm(result.mx,skat_variance_fdr,result.df)
+
+```
+
+### QQ plot for SKAT Variance-based test for pathways
+
+Not relevant for number of pathways < 10
+
+# --- SKAT Burden test for pathways --- #
+
+### Calculate
+
+```{r calculate_SKAT_burden_test_pathway}
+
+# Prepare empty matrix for results
+result.mx <- matrix(ncol=8, nrow=0) 
+colnames(result.mx) <- c("pathway", "num_var", 
+         "skat_burden_p",  "skat_burden_is_accurate", "skat_burden_mac", "skat_burden_map", 
+         "skat_burden_status","skat_burden_message")
+
+# For each pathway
+for(pathway in pathways){
+
+  # Initialise results to NA
+  # results that will not be possible to calculate remain NA
+  vars <- NA
+  num_vars <- NA
+  skat_burden_test <- NA
+  skat_burden_p <- NA
+  skat_burden_is_accurate <- NA
+  skat_burden_mac <- NA  
+  skat_burden_map <- NA
+  skat_burden_status <- NA
+  skat_burden_message <- NA
+  X <- NA
+
+  # Get variant IDs
+  vars <- variants.df[variants.df$pathways==pathway, "VarID"]
+  
+  # Get number of variants
+  num_vars <- length(vars)
+
+  # If there are more tan one variants per pathway
+  if(num_vars > 1){
+
+    # Get matrix of genotypes for the pathway variants in the pathway  
+    X <- G[,vars]
+
+    # Try to calculate burden test (method="Burden") test for binary outcomes with efficient resampling (method.bin = "ER")
+    skat_burden_test <- tryCatchAdv( SKATBinary(X, skat_null, method="Burden", method.bin = "ER") )
+    
+    # Get status (success, warning, error)
+    skat_burden_status <- skat_burden_test$status
+  
+    # Get error/warning message, if any
+    if(skat_burden_status != "succeeded"){
+      skat_burden_message <- skat_burden_test$message$message
+    }
+  
+    # If SKAT completed with success or warning
+    if(skat_burden_status != "error"){
+    
+      # Extract the results
+      skat_burden_test <- skat_burden_test$value # Get results out of the tryCatchAdv list
+      skat_burden_p <- skat_burden_test$p.value
+      skat_burden_is_accurate <- skat_burden_test$is.accurate # Was resampling suficient ?
+      skat_burden_mac <- skat_burden_test$MAC # Minimal (aggregated) Allele Count 
+      skat_burden_map <- skat_burden_test$MAP # Minimal Acheaved P-value (for adjusted QQ-plot)
+    }
+  } 
+  
+  # Add results to matrix
+  result.mx <- rbind(result.mx, c(pathway, num_vars, 
+                skat_burden_p, skat_burden_is_accurate, skat_burden_mac, skat_burden_map, 
+                skat_burden_status, skat_burden_message))
+
+} # next pathway
+
+# explore result
+dim(result.mx)
+
+# Clean-up
+rm(Y, C, E, G, pathway, pathways, skat_null, vars, num_vars, X, 
+   skat_burden_test, skat_burden_p, skat_burden_is_accurate, skat_burden_mac, skat_burden_map, 
+   skat_burden_status, skat_burden_message, tryCatchAdv)
+
+```
+
+### Update result matrix and add it to pathways.df
+
+```{r update_SKAT_burden_pathways}
+
+# Convert to data frame
+result.df <- as.data.frame(result.mx)
+#str(result.df)
+
+# Update type of numeric fields
+result.df$num_var <- as.integer(result.df$num_var)
+result.df$skat_burden_p <- as.numeric(result.df$skat_burden_p)
+result.df$skat_burden_is_accurate <- as.logical(result.df$skat_burden_is_accurate)
+result.df$skat_burden_mac <- as.integer(result.df$skat_burden_mac)
+result.df$skat_burden_map <- as.numeric(result.df$skat_burden_map)
+#str(result.df)
+
+rownames(result.df) <- result.df$pathway # Move pathway name to row names
+result.df <- result.df[,c(-1,-2)] # Remove pathway name and num of vars (already present in pathways.df)
+#head(result.df)
+
+# Add result to pathways.df table
+sum(rownames(result.df) != rownames(pathways.df))
+pathways.df <- cbind(pathways.df,result.df) 
+
+# Multiple testing correction: calculate FDR
+skat_burden_fdr <- p.adjust(pathways.df$skat_burden_p, method="fdr")
+pathways.df <- cbind(pathways.df,skat_burden_fdr) 
+
+# Check most significant variants
+pathways.df %>% 
+  select(pathways,total_var,ClinVar,LoF,FIM,skat_burden_mac,skat_burden_fdr,crude_effect_direction,
+         skat_burden_p,skat_burden_is_accurate,skat_burden_status, skat_burden_message) %>% 
+  arrange(skat_burden_p)
+
+# Clean-up
+rm(result.mx,skat_burden_fdr,result.df)
+
+```
+
+### QQ plot for SKAT Burden test for pathways
+
+Not relevant for number of pathways < 10
+
+# --- Final section --- #
+
+### Save and clean-up 
+
+```{r final_section}
+
+# Save table with variants
+write.table(variants.df, 
+            file=paste(base_folder,"/scripts/",working_folder,"/",analysis_name,"_variants.tsv",sep=""),
+            quote=F, sep="\t", col.names=T, row.names=F)
+
+# Save table with genes
+write.table(genes.df, 
+            file=paste(base_folder,"/scripts/",working_folder,"/",analysis_name,"_genes.tsv",sep=""),
+            quote=F, sep="\t", col.names=T, row.names=F)
+
+# Save table with pathways
+write.table(pathways.df, 
+            file=paste(base_folder,"/scripts/",working_folder,"/",analysis_name,"_pathways.tsv",sep=""),
+            quote=F, sep="\t", col.names=T, row.names=F)
+
+# Save
+save.image(paste(base_folder,"/data/",working_folder,"/",analysis_name,".RData",sep=""))
+
+# Log
+ls()
+sessionInfo()
+Sys.time()
+
+# Clean-up
+rm(list=ls())
+graphics.off()
+gc()
+
+```
