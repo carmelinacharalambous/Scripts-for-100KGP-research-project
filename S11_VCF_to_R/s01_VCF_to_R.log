@@ -1,0 +1,130 @@
+Read vcf to R 
+[1] "2019-05-20 14:07:45 BST"
+[1] "R version 3.5.1 (2018-07-02)"
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 258536 13.9     627480 33.6   422077 22.6
+Vcells 451214  3.5    8388608 64.0  1759015 13.5
+
+Attached lib folders: 
+[1] "/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/k02_inuvika_r_libs/R_3.5.1"
+[2] "/public_data_resources/Rpackages/3.5.1"                                                                 
+[3] "/tools/apps/R/3.5.1/lib/R/library"                                                                      
+
+Completed start section 
+[1] "2019-05-20 14:07:57 BST"
+
+Scanning file to determine attributes.
+File attributes:
+  meta lines: 2669
+  header_line: 2670
+  variant count: 73907
+  column count: 12458
+Meta line 1000 read in.Meta line 2000 read in.Meta line 2669 read in.
+All meta lines processed.
+gt matrix initialized.
+Character matrix gt created.
+  Character matrix gt rows: 73907
+  Character matrix gt cols: 12458
+  skip: 0
+  nrows: 73907
+  row_num: 0
+Processed variant 1000Processed variant 2000Processed variant 3000Processed variant 4000Processed variant 5000Processed variant 6000Processed variant 7000Processed variant 8000Processed variant 9000Processed variant 10000Processed variant 11000Processed variant 12000Processed variant 13000Processed variant 14000Processed variant 15000Processed variant 16000Processed variant 17000Processed variant 18000Processed variant 19000Processed variant 20000Processed variant 21000Processed variant 22000Processed variant 23000Processed variant 24000Processed variant 25000Processed variant 26000Processed variant 27000Processed variant 28000Processed variant 29000Processed variant 30000Processed variant 31000Processed variant 32000Processed variant 33000Processed variant 34000Processed variant 35000Processed variant 36000Processed variant 37000Processed variant 38000Processed variant 39000Processed variant 40000Processed variant 41000Processed variant 42000Processed variant 43000Processed variant 44000Processed variant 45000Processed variant 46000Processed variant 47000Processed variant 48000Processed variant 49000Processed variant 50000Processed variant 51000Processed variant 52000Processed variant 53000Processed variant 54000Processed variant 55000Processed variant 56000Processed variant 57000Processed variant 58000Processed variant 59000Processed variant 60000Processed variant 61000Processed variant 62000Processed variant 63000Processed variant 64000Processed variant 65000Processed variant 66000Processed variant 67000Processed variant 68000Processed variant 69000Processed variant 70000Processed variant 71000Processed variant 72000Processed variant 73000Processed variant: 73907
+All variants processed
+Completed reading vcfR 
+[1] "2019-05-20 15:01:15 BST"
+Size of vcfR object: 
+variants fix_cols  gt_cols 
+   73907        8    12450 
+
+Completed extracting meta.df and fixed.df 
+[1] "2019-05-20 15:02:00 BST"
+Sizes of new dataframes: 
+meta.df: 48 5 
+fixed.df: 73907 55 
+
+Renamed initial AC and AN, calculated initial AF 
+[1] "2019-05-20 15:02:00 BST"
+
+Completed parsing VEP annotation 
+[1] "2019-05-20 15:02:02 BST"
+Detected 66 VEP fields 
+
+Renamed VEP AF fields
+[1] "2019-05-20 15:02:02 BST"
+
+Recoded missed VEP values to NA 
+[1] "2019-05-20 15:02:03 BST"
+
+Completed extracting matrices: gt_num, gt_chr, gq, dp and ad
+[1] "2019-05-20 17:11:11 BST"
+Sizes of the extracted matrices:
+gt_num.mx: 73907 12449 
+gt_chr.mx: 73907 12449 
+dp.mx: 73907 12449 
+gq.mx: 73907 12449 
+ad.mx: 73907 12449 
+
+Calculated additive, dominant and recessive genotype matrices 
+[1] "2019-05-20 17:26:12 BST"
+Sizes of the new matrices:
+gt_add.mx: 73907 12449 
+gt_dom.mx: 73907 12449 
+gt_rec.mx: 73907 12449 
+
+Completed splitting ad matrix 
+[1] "2019-05-20 18:10:20 BST"
+Sizes of the new matrices:
+ref.mx: 73907 12449 
+alt.mx: 73907 12449 
+
+Updated row names 
+[1] "2019-05-20 18:19:26 BST"
+
+Saved results
+[1] "2019-05-20 19:29:53 BST"
+
+List of 12 saved objects:
+ [1] "ad.mx"     "alt.mx"    "dp.mx"     "fixed.df"  "gq.mx"     "gt_add.mx"
+ [7] "gt_chr.mx" "gt_dom.mx" "gt_num.mx" "gt_rec.mx" "meta.df"   "ref.mx"   
+
+sessionInfo:
+R version 3.5.1 (2018-07-02)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 16.04.3 LTS
+
+Matrix products: default
+BLAS: /tools/apps/R/3.5.1/lib/R/lib/libRblas.so
+LAPACK: /tools/apps/R/3.5.1/lib/R/lib/libRlapack.so
+
+locale:
+ [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_GB.UTF-8        LC_COLLATE=en_GB.UTF-8    
+ [5] LC_MONETARY=en_GB.UTF-8    LC_MESSAGES=en_GB.UTF-8   
+ [7] LC_PAPER=en_GB.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] bindrcpp_0.2.2 dplyr_0.7.8    tidyr_0.8.2    stringr_1.3.1  vcfR_1.8.0    
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.0        bindr_0.1.1       cluster_2.0.7-1   magrittr_1.5     
+ [5] MASS_7.3-50       tidyselect_0.2.5  viridisLite_0.3.0 ape_5.3          
+ [9] lattice_0.20-35   R6_2.3.0          rlang_0.3.1       tools_3.5.1      
+[13] parallel_3.5.1    grid_3.5.1        nlme_3.1-137      mgcv_1.8-24      
+[17] vegan_2.5-3       assertthat_0.2.0  tibble_2.0.1      permute_0.9-4    
+[21] crayon_1.3.4      Matrix_1.2-14     purrr_0.3.0       glue_1.3.0       
+[25] pinfsc50_1.1.0    stringi_1.2.4     compiler_3.5.1    pillar_1.3.1     
+[29] memuse_4.0-0      pkgconfig_2.0.2  
+
+Memory info:
+             used    (Mb)  gc trigger     (Mb)    max used     (Mb)
+Ncells    2121920   113.4   751658377  40142.9   922259754  49254.0
+Vcells 8295002031 63285.9 18233878284 139113.5 17956507230 136997.3
+
+Completed all tasks
+[1] "2019-05-20 19:30:10 BST"
+

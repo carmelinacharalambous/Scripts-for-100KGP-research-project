@@ -1,0 +1,55 @@
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-130.gel.zone>
+Subject: Job 710165: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S10_fill_tags/s01_fill_tags.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S10_fill_tags/s01_fill_tags.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Mon May 20 12:59:49 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-130.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Mon May 20 12:59:49 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S10_fill_tags> was used as the working directory.
+Started at Mon May 20 12:59:49 2019
+Terminated at Mon May 20 13:58:48 2019
+Results reported at Mon May 20 13:58:48 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S10_fill_tags/s01_fill_tags.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   1275.46 sec.
+    Max Memory :                                 24 MB
+    Average Memory :                             21.99 MB
+    Total Requested Memory :                     6000.00 MB
+    Delta Memory :                               5976.00 MB
+    Max Swap :                                   168 MB
+    Max Processes :                              4
+    Max Threads :                                5
+    Run time :                                   3543 sec.
+    Turnaround time :                            3539 sec.
+
+The output (if any) follows:
+
+Annotate with bcftools fill-tags plugin
+Mon 20 May 12:59:50 BST 2019
+
+
+--- Input and output files ---
+
+source_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S09_add_var_id/results/annotated_VEP_ClinVar_VarID.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/data/S10_fill_tags/s01_VEP_clinvar_VarID_tags.vcf.gz
+
+Working...
+
+Done
+Mon 20 May 13:58:48 BST 2019
+
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S10_fill_tags/s01_fill_tags.err> for stderr output of this job.
+

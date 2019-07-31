@@ -1,0 +1,93 @@
+/tools/apps/R/3.5.1/lib/R/bin/exec/R: /tools/apps/xz/5.0.3/lib/liblzma.so.5: no version information available (required by /tools/apps/R/3.5.1/lib/R/bin/exec/R)
+Explore genotypes 
+
+[1] "2019-05-23 13:04:48 BST"
+[1] "R version 3.5.1 (2018-07-02)"
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 258536 13.9     627480 33.6   422077 22.6
+Vcells 451214  3.5    8388608 64.0  1759015 13.5
+
+Completed start section 
+[1] "2019-05-23 13:04:48 BST"
+
+Loaded source data 
+[1] "2019-05-23 13:06:18 BST"
+Size of the loaded objects: 
+gt_add.mx: 73907 12449 
+gq.mx: 73907 12449 
+dp.mx: 73907 12449 
+
+Genotypes NA rate: 0.0002473806 
+
+Proportion of HomRef genotypes: 0.9746534 
+Proportion of Het genotypes: 0.01741501 
+Proportion of HomAlt genotypes: 0.00793156 
+
+Quartiles of gq in non-NA genotypes: 
+  0%  25%  50%  75% 100% 
+   0   50   70   90 3070 
+
+Proportion of genotypes with gq < 20: 0.01601517 
+
+Made histograms of gq in non-NA genotypes 
+
+null device 
+          1 
+null device 
+          1 
+Quartiles of dp in non-NA genotypes: 
+  0%  25%  50%  75% 100% 
+   0   22   27   35  204 
+
+Proportion of genotypes with dp < 10: 0.01060456 
+
+Made histogram of dp in non-NA genotypes 
+
+null device 
+          1 
+Some additional checks: 
+
+Total number of genotypes: 920068243 
+
+Num of genotypes missed despite the good quality (gq > 20): 0 
+Num of genotypes missed despite the good coverage (dp > 10): 0 
+
+Num of genotypes assigned despite gq==0: 6688904 
+Num of genotypes assigned despite dp==0: 643 
+
+Num of genotypes assigned despite the missed gq: 10310 
+Num of genotypes assigned despite the missed dp: 108810 
+
+Saved plots data 
+
+sessionInfo:
+R version 3.5.1 (2018-07-02)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 16.04.3 LTS
+
+Matrix products: default
+BLAS: /tools/apps/R/3.5.1/lib/R/lib/libRblas.so
+LAPACK: /tools/apps/R/3.5.1/lib/R/lib/libRlapack.so
+
+locale:
+ [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_GB.UTF-8        LC_COLLATE=en_GB.UTF-8    
+ [5] LC_MONETARY=en_GB.UTF-8    LC_MESSAGES=en_GB.UTF-8   
+ [7] LC_PAPER=en_GB.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+[1] compiler_3.5.1
+
+Memory use:
+             used    (Mb) gc trigger    (Mb)   max used    (Mb)
+Ncells     360341    19.3     627480    33.6     422077    22.6
+Vcells 3221182744 24575.7 7952467600 60672.6 7820349711 59664.6
+
+Completed all tasks
+[1] "2019-05-23 13:11:25 BST"
+

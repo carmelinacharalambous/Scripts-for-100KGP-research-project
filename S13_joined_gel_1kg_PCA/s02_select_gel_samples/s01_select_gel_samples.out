@@ -1,0 +1,68 @@
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-137.gel.zone>
+Subject: Job 715019: </re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/scripts/s13_add_eigenvectors/s02_select_gel_samples/s01_select_gel_samples.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/scripts/s13_add_eigenvectors/s02_select_gel_samples/s01_select_gel_samples.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <alarionov> in cluster <pegasus> at Mon May 20 20:05:07 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-137.gel.zone>, in queue <gecip>, as user <alarionov> in cluster <pegasus> at Mon May 20 20:05:07 2019
+</home/alarionov> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/scripts/s13_add_eigenvectors/s02_select_gel_samples> was used as the working directory.
+Started at Mon May 20 20:05:07 2019
+Terminated at Tue May 21 00:37:03 2019
+Results reported at Tue May 21 00:37:03 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/scripts/s13_add_eigenvectors/s02_select_gel_samples/s01_select_gel_samples.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   11097.22 sec.
+    Max Memory :                                 28 MB
+    Average Memory :                             20.97 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   195 MB
+    Max Processes :                              7
+    Max Threads :                                8
+    Run time :                                   16316 sec.
+    Turnaround time :                            16316 sec.
+
+The output (if any) follows:
+
+Select 12,449 GEL samples for PCA
+Mon 20 May 20:05:07 BST 2019
+
+Loaded accessory functions
+
+samples_file: /re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/data/s13_add_eigenvectors/s01_copy_sourse_data/intersect_labkey_VCF_samples.txt
+sourse_vcf: /re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/data/s13_add_eigenvectors/s01_copy_sourse_data/all_gel_100kv_b38_genotypes.vcf.gz
+output_vcf: /re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/data/s13_add_eigenvectors/s02_select_gel_samples/selected_gel_cases_filtered_b38_genotypes.vcf.gz
+
+Number of samples in the samples file: 
+
+Selecting samples ...
+Mon 20 May 21:59:43 BST 2019
+
+Filtering variants ...
+Mon 20 May 22:52:24 BST 2019
+
+Indexing ...
+Mon 20 May 22:56:17 BST 2019
+
+Number of variants and samples in the input and output VCF files:
+Sourse: 100,000 x 59,464
+Output: 99,476 x 12,449
+
+Done
+Tue 21 May 00:37:02 BST 2019
+
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/tischkowitz/users/alexey/fa_analysis/scripts/s13_add_eigenvectors/s02_select_gel_samples/s01_select_gel_samples.err> for stderr output of this job.
+

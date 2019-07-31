@@ -1,0 +1,334 @@
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-130.gel.zone>
+Subject: Job 460621: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Sun May  5 13:57:40 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-130.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Sun May  5 13:58:00 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual> was used as the working directory.
+Started at Sun May  5 13:58:00 2019
+Terminated at Sun May  5 13:58:26 2019
+Results reported at Sun May  5 13:58:26 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   9.02 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   26 sec.
+    Turnaround time :                            46 sec.
+
+The output (if any) follows:
+
+Filter sorted VCF file
+Sun  5 May 13:58:01 BST 2019
+
+bcftools 1.9
+Using htslib 1.9
+Copyright (C) 2018 Genome Research Ltd.
+License Expat: The MIT/Expat license
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Num of var in the source file:
+15429
+Num of var in the output file:
+13381
+
+Filtered VCF
+Sun  5 May 13:58:26 BST 2019
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-030.gel.zone>
+Subject: Job 460860: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Mon May  6 18:35:01 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-030.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Mon May  6 18:35:05 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual> was used as the working directory.
+Started at Mon May  6 18:35:05 2019
+Terminated at Mon May  6 18:35:05 2019
+Results reported at Mon May  6 18:35:05 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh
+------------------------------------------------------------
+
+Exited with exit code 126.
+
+Resource usage summary:
+
+    CPU time :                                   0.02 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   0 sec.
+    Turnaround time :                            4 sec.
+
+The output (if any) follows:
+
+Filter sorted VCF file
+Mon  6 May 18:35:05 BST 2019
+
+bcftools 1.9
+Using htslib 1.9
+Copyright (C) 2018 Genome Research Ltd.
+License Expat: The MIT/Expat license
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-128.gel.zone>
+Subject: Job 460861: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh> in cluster <pegasus> Exited
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Mon May  6 18:43:36 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-128.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Mon May  6 18:43:45 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual> was used as the working directory.
+Started at Mon May  6 18:43:45 2019
+Terminated at Mon May  6 18:43:46 2019
+Results reported at Mon May  6 18:43:46 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh
+------------------------------------------------------------
+
+Exited with exit code 126.
+
+Resource usage summary:
+
+    CPU time :                                   0.03 sec.
+    Max Memory :                                 -
+    Average Memory :                             -
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   -
+    Max Processes :                              -
+    Max Threads :                                -
+    Run time :                                   1 sec.
+    Turnaround time :                            10 sec.
+
+The output (if any) follows:
+
+Filter sorted VCF file
+Mon  6 May 18:43:46 BST 2019
+
+bcftools 1.9
+Using htslib 1.9
+Copyright (C) 2018 Genome Research Ltd.
+License Expat: The MIT/Expat license
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-145.gel.zone>
+Subject: Job 460862: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Mon May  6 18:46:17 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-145.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Mon May  6 18:46:20 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual> was used as the working directory.
+Started at Mon May  6 18:46:20 2019
+Terminated at Mon May  6 18:46:39 2019
+Results reported at Mon May  6 18:46:39 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   9.02 sec.
+    Max Memory :                                 1 MB
+    Average Memory :                             1.00 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   45 MB
+    Max Processes :                              3
+    Max Threads :                                4
+    Run time :                                   19 sec.
+    Turnaround time :                            22 sec.
+
+The output (if any) follows:
+
+Filter sorted VCF file
+Mon  6 May 18:46:26 BST 2019
+
+bcftools 1.9
+Using htslib 1.9
+Copyright (C) 2018 Genome Research Ltd.
+License Expat: The MIT/Expat license
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Num of var in the source file:
+15429
+Num of var in the output file:
+13381
+
+Filtered VCF
+Mon  6 May 18:46:39 BST 2019
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-068.gel.zone>
+Subject: Job 490955: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Tue May  7 17:17:21 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-068.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Tue May  7 17:17:27 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual> was used as the working directory.
+Started at Tue May  7 17:17:27 2019
+Terminated at Tue May  7 17:53:48 2019
+Results reported at Tue May  7 17:53:48 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   1615.28 sec.
+    Max Memory :                                 23 MB
+    Average Memory :                             18.08 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   167 MB
+    Max Processes :                              10
+    Max Threads :                                11
+    Run time :                                   2182 sec.
+    Turnaround time :                            2187 sec.
+
+The output (if any) follows:
+
+Filter sorted VCF file
+Tue  7 May 17:17:33 BST 2019
+
+bcftools 1.9
+Using htslib 1.9
+Copyright (C) 2018 Genome Research Ltd.
+License Expat: The MIT/Expat license
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Num of var in the source file:
+121048
+Num of var in the output file:
+68297
+
+Filtered VCF
+Tue  7 May 17:53:48 BST 2019
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.err> for stderr output of this job.
+
+Sender: LSF System <hpc-grid-lsfadmin@hpc-prod-grid-lsfexec-146.gel.zone>
+Subject: Job 494752: </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh> in cluster <pegasus> Done
+
+Job </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh> was submitted from host <hpc-prod-grid-login-gecip-01.gel.zone> by user <ccharalambous> in cluster <pegasus> at Wed May  8 10:00:33 2019
+Job was executed on host(s) <hpc-prod-grid-lsfexec-146.gel.zone>, in queue <gecip>, as user <ccharalambous> in cluster <pegasus> at Wed May  8 10:00:39 2019
+</home/ccharalambous> was used as the home directory.
+</re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual> was used as the working directory.
+Started at Wed May  8 10:00:39 2019
+Terminated at Wed May  8 10:28:40 2019
+Results reported at Wed May  8 10:28:40 2019
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+/re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   1676.51 sec.
+    Max Memory :                                 24 MB
+    Average Memory :                             18.32 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   167 MB
+    Max Processes :                              10
+    Max Threads :                                11
+    Run time :                                   1681 sec.
+    Turnaround time :                            1687 sec.
+
+The output (if any) follows:
+
+Filter sorted VCF file
+Wed  8 May 10:00:42 BST 2019
+
+bcftools 1.9
+Using htslib 1.9
+Copyright (C) 2018 Genome Research Ltd.
+License Expat: The MIT/Expat license
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Num of var in the source file:
+121048
+Num of var in the output file:
+73907
+
+Filtered VCF
+Wed  8 May 10:28:40 BST 2019
+
+
+PS:
+
+Read file </re_gecip/inherited_cancer_predisposition/ccharalambous/Final_execution/scripts/S06_filter_by_qual/s01_filter_by_qual.err> for stderr output of this job.
+
